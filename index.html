@@ -179,8 +179,18 @@
     width:6px; height:6px; border-radius:50%; background:var(--green);
   }
 
-  .load-chart-wrap{ padding: 6px 2px 4px; }
-  .load-chart-labels{ display:flex; justify-content:space-between; font-size:10px; color:var(--text-faint); font-family:'JetBrains Mono',monospace; margin-top:6px; }
+  .load-chart-wrap{ padding: 6px 2px 4px; overflow-x:auto; }
+  .load-chart-wrap svg{ min-width:460px; }
+  .load-chart-labels{ display:flex; justify-content:space-between; font-size:10px; color:var(--text-faint); font-family:'JetBrains Mono',monospace; margin-top:6px; min-width:460px; }
+  .view-select{
+    appearance:none; -webkit-appearance:none;
+    background: var(--surface); border:1px solid var(--border-soft);
+    color:var(--text-dim); font-size:11px; font-weight:500; font-family:'Space Grotesk',sans-serif;
+    padding:6px 24px 6px 10px; border-radius:8px; cursor:pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238b8b93' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position: right 8px center;
+  }
+  .view-select:hover{ color:var(--text); background-color:var(--surface-strong); }
 
   .hero-metrics{
     display:grid; grid-template-columns: repeat(4,1fr); gap:10px; margin-top:6px;
@@ -379,39 +389,48 @@
             <div class="hero-title">System activity</div>
             <div style="display:flex; align-items:center; gap:10px;">
               <div class="status-pill"><span class="pulse"></span>All Systems Operational</div>
+              <select class="view-select" id="heroViewSelect">
+                <option value="numbers">Numbers</option>
+                <option value="chart">Chart</option>
+              </select>
               <div class="icon-btn" style="width:32px;height:32px;background:rgba(255,255,255,0.05);" title="Search">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
               </div>
             </div>
           </div>
-          <div class="load-chart-wrap">
-            <svg width="100%" height="120" viewBox="0 0 460 120" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="loadFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#5b9dd9" stop-opacity="0.30"/>
-                  <stop offset="100%" stop-color="#5b9dd9" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
-                <line x1="0" y1="20" x2="460" y2="20"/>
-                <line x1="0" y1="55" x2="460" y2="55"/>
-                <line x1="0" y1="90" x2="460" y2="90"/>
-              </g>
-              <polyline points="0,78 28,72 57,80 85,60 114,66 142,48 171,54 200,38 228,44 257,30 285,40 314,26 342,34 371,22 400,29 428,18 460,24"
-                fill="none" stroke="#5b9dd9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <polygon points="0,78 28,72 57,80 85,60 114,66 142,48 171,54 200,38 228,44 257,30 285,40 314,26 342,34 371,22 400,29 428,18 460,24 460,120 0,120"
-                fill="url(#loadFill)"/>
-            </svg>
-            <div class="load-chart-labels">
-              <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>now</span>
-            </div>
-          </div>
-          <div class="hero-metrics">
+
+          <div class="hero-metrics" id="heroNumbersView" style="margin-top:4px;">
             <div class="hm blue"><div class="v">12</div><div class="l">Projects</div></div>
             <div class="hm purple"><div class="v">4</div><div class="l">Active Agents</div></div>
             <div class="hm green"><div class="v">8</div><div class="l">Systems Online</div></div>
             <div class="hm"><div class="v">99.8%</div><div class="l">Uptime</div></div>
           </div>
+
+          <div id="heroChartView" style="display:none;">
+            <div class="load-chart-wrap">
+              <svg width="100%" height="120" viewBox="0 0 460 120" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="loadFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#5b9dd9" stop-opacity="0.30"/>
+                    <stop offset="100%" stop-color="#5b9dd9" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+                  <line x1="0" y1="20" x2="460" y2="20"/>
+                  <line x1="0" y1="55" x2="460" y2="55"/>
+                  <line x1="0" y1="90" x2="460" y2="90"/>
+                </g>
+                <polyline points="0,78 28,72 57,80 85,60 114,66 142,48 171,54 200,38 228,44 257,30 285,40 314,26 342,34 371,22 400,29 428,18 460,24"
+                  fill="none" stroke="#5b9dd9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <polygon points="0,78 28,72 57,80 85,60 114,66 142,48 171,54 200,38 228,44 257,30 285,40 314,26 342,34 371,22 400,29 428,18 460,24 460,120 0,120"
+                  fill="url(#loadFill)"/>
+              </svg>
+              <div class="load-chart-labels">
+                <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>now</span>
+              </div>
+            </div>
+          </div>
+
           <div class="hero-foot">
             <span>Last checked 2 min ago</span>
             <span class="mono">41d 06h uptime</span>
@@ -648,6 +667,20 @@
 </div>
 
 <script>
+  // Hero view toggle — Numbers (default, compact) vs Chart (scrollable)
+  const heroSelect = document.getElementById('heroViewSelect');
+  const numbersView = document.getElementById('heroNumbersView');
+  const chartView = document.getElementById('heroChartView');
+  heroSelect.addEventListener('change', ()=>{
+    if(heroSelect.value === 'chart'){
+      numbersView.style.display = 'none';
+      chartView.style.display = 'block';
+    } else {
+      numbersView.style.display = 'grid';
+      chartView.style.display = 'none';
+    }
+  });
+
   // Tabs interactivity
   document.querySelectorAll('.tab').forEach(tab=>{
     tab.addEventListener('click', ()=>{
