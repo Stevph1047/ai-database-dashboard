@@ -359,6 +359,53 @@
     max-width:1400px; margin: 26px 26px 0; padding-top:16px; border-top:1px solid var(--border-soft);
     font-size:11px; color:var(--text-faint);
   }
+
+  /* ===== Glass theme + semantic color coding ===== */
+  :root{
+    --bg:#0a0e06; --bg-elev:#10150b;
+    --surface:rgba(255,255,255,0.06); --surface-strong:rgba(255,255,255,0.10);
+    --border:rgba(255,255,255,0.14); --border-soft:rgba(255,255,255,0.09);
+    --text:#f4f7f1; --text-dim:#a9b3a2; --text-faint:#78826f;
+    --green:#20be35; --green-dim:rgba(32,190,53,0.18);
+    --yellow:#ffce06; --orange:#ffce06;
+    --red:#ff5a4f;
+    --blue:#b5fdce; --blue-dim:rgba(181,253,206,0.16);
+    --purple:#b5fdce; --purple-dim:rgba(181,253,206,0.16);
+  }
+  body{
+    background:
+      radial-gradient(900px 600px at 10% -5%, rgba(32,190,53,0.34), transparent 60%),
+      radial-gradient(800px 600px at 100% 100%, rgba(255,206,6,0.12), transparent 60%),
+      #0a0e06;
+    background-attachment: fixed;
+  }
+  .topnav{ background:rgba(255,255,255,0.05); backdrop-filter:blur(24px) saturate(140%); -webkit-backdrop-filter:blur(24px) saturate(140%); border-bottom:1px solid var(--border-soft); }
+  .sidebar{ background:rgba(255,255,255,0.03); }
+  .sidebar a.active{ background:rgba(32,190,53,0.22); }
+  .searchbar,.icon-btn,.view-select,.tabs{ background:rgba(255,255,255,0.07); border-color:var(--border); }
+  .card{
+    background:var(--surface);
+    backdrop-filter:blur(26px) saturate(150%); -webkit-backdrop-filter:blur(26px) saturate(150%);
+    border:1px solid var(--border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 10px 36px rgba(0,0,0,0.30);
+  }
+  .hl,.hm,.pcard,.batt-chip{ background:rgba(255,255,255,0.05); border:1px solid var(--border-soft); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); }
+  .hero{ background:var(--surface); }
+  footer.note{ display:none; }
+  svg polyline[stroke="#5b9dd9"]{ stroke:#b5fdce; }
+  svg stop[stop-color="#5b9dd9"]{ stop-color:#b5fdce; }
+  .hm:nth-child(4) .v{ color:var(--green); }
+  .batt-chip[data-target="b2"] .fill, #energyB2View .fill{ background:var(--yellow) !important; }
+  .batt-chip[data-target="b3"] .fill, #energyB3View .fill{ background:var(--red) !important; }
+  .feed .feed-item:nth-child(1) .feed-dot,.feed .feed-item:nth-child(3) .feed-dot{ background:var(--blue); }
+  .feed .feed-item:nth-child(2) .feed-dot,.feed .feed-item:nth-child(4) .feed-dot,.feed .feed-item:nth-child(5) .feed-dot{ background:var(--green); }
+  .pcard-status.paused{ color:var(--yellow); background:rgba(255,206,6,0.16); }
+  .pcard:nth-child(4) .pcard-icon{ background:rgba(255,206,6,0.16) !important; }
+  .pcard-badge{ color:#0a0e06; }
+  .pcard-badge:not([style]){ color:#fff; }
+  .legend{ display:flex; gap:14px; margin-left:8px; font-size:11px; color:var(--text-dim); white-space:nowrap; }
+  .legend i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+  @media (max-width:1100px){ .legend{ display:none; } }
 </style>
 </head>
 <body>
@@ -374,6 +421,7 @@
     <kbd>⌘K</kbd>
   </div>
 
+  <div class="legend"><span><i style="background:var(--green)"></i>Healthy</span><span><i style="background:var(--yellow)"></i>Attention</span><span><i style="background:var(--red)"></i>Critical</span><span><i style="background:var(--blue)"></i>Info</span></div>
   <div class="navright">
     <div class="icon-btn" title="Notifications">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
