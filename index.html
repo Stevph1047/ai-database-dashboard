@@ -464,6 +464,54 @@
   .searchbar,.icon-btn,.view-select,.tabs{ background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.22); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
   .tab.active,.sidebar a.active{ background:rgba(255,255,255,0.22); }
   .bar-outer{ background:rgba(255,255,255,0.14); }
+
+  /* ===== Minimal home: metrics strip + app tiles ===== */
+  .metrics{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); gap:6px;
+    padding:14px 10px; border-radius:var(--radius-lg);
+    background:linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+    backdrop-filter:blur(30px) saturate(190%); -webkit-backdrop-filter:blur(30px) saturate(190%);
+    border:1px solid rgba(255,255,255,0.30);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 14px 40px rgba(0,0,0,0.30);
+  }
+  .metric{ text-align:center; padding:4px 6px; }
+  .metric b{ display:block; font-family:'JetBrains Mono',monospace; font-size:19px; font-weight:600; }
+  .metric span{ display:block; font-size:11px; color:var(--text-dim); margin-top:3px; }
+  .metric.g b{ color:var(--green); } .metric.y b{ color:var(--yellow); }
+  .sec-title{ margin:34px 4px 0; font-size:13px; font-weight:600; color:var(--text-dim); }
+  .apps{ display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:30px 16px; margin-top:20px; justify-items:center; }
+  .app{ background:none; border:0; color:inherit; font-family:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .app-icon{
+    position:relative; width:104px; height:104px; border-radius:30px; display:grid; place-items:center;
+    background:linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06));
+    backdrop-filter:blur(26px) saturate(190%); -webkit-backdrop-filter:blur(26px) saturate(190%);
+    border:1px solid rgba(255,255,255,0.32);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 16px 32px rgba(0,0,0,0.35);
+    color:var(--st,var(--green)); transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .app:hover .app-icon{ transform:translateY(-5px) scale(1.05); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 26px 44px rgba(0,0,0,0.42); }
+  .app-icon svg{ width:46px; height:46px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .app-icon::after{ content:""; position:absolute; left:50%; bottom:9px; width:18px; height:4px; margin-left:-9px; border-radius:99px; background:var(--st,var(--green)); }
+  .app-badge{ position:absolute; top:-6px; right:-6px; min-width:22px; height:22px; padding:0 6px; border-radius:99px; background:var(--red); color:#fff; font:600 11px 'JetBrains Mono',monospace; display:flex; align-items:center; justify-content:center; border:2px solid rgba(10,14,6,0.6); }
+  .app-name{ font-size:12.5px; font-weight:500; max-width:116px; text-align:center; line-height:1.3; }
+  .more-btn{ display:block; margin:40px auto 0; padding:9px 18px; border-radius:99px; font:500 12px 'Space Grotesk',sans-serif; color:var(--text); cursor:pointer; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.24); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+  .more-btn:hover{ background:rgba(255,255,255,0.2); }
+  .details{ margin-top:22px; }
+  .details[hidden]{ display:none; }
+  .details > div:nth-of-type(n+2){ display:none; }
+  .sheet{ position:fixed; inset:0; z-index:50; display:grid; place-items:center; background:rgba(0,0,0,0.45); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+  .sheet[hidden]{ display:none; }
+  .sheet-card{ position:relative; width:min(520px,92vw); padding:26px; border-radius:var(--radius-lg); background:linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.07)); backdrop-filter:blur(30px) saturate(190%); -webkit-backdrop-filter:blur(30px) saturate(190%); border:1px solid rgba(255,255,255,0.32); box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 30px 70px rgba(0,0,0,0.5); }
+  .sheet-close{ position:absolute; top:12px; right:14px; background:none; border:0; color:var(--text-dim); font-size:24px; cursor:pointer; }
+  .sheet-head{ display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+  .sheet-head .app-icon{ width:64px; height:64px; border-radius:20px; }
+  .sheet-head .app-icon svg{ width:30px; height:30px; }
+  .sheet-title{ font-size:17px; font-weight:600; }
+  .sheet-status{ font-size:12px; color:var(--st,var(--green)); margin-top:3px; }
+  .sheet-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; text-align:center; }
+  .sheet-stats b{ display:block; font:600 18px 'JetBrains Mono',monospace; }
+  .sheet-stats span{ font-size:11px; color:var(--text-dim); }
+  .sheet-placeholder{ border:1px dashed rgba(255,255,255,0.3); border-radius:var(--radius-md); padding:26px; text-align:center; font-size:12px; color:var(--text-faint); }
 </style>
 </head>
 <body>
@@ -524,6 +572,58 @@
   </div>
 
   <div class="main">
+    <div class="metrics">
+      <div class="metric"><b>12</b><span>Projects</span></div>
+      <div class="metric"><b>4</b><span>Agents</span></div>
+      <div class="metric g"><b>8</b><span>Online</span></div>
+      <div class="metric g"><b>99.8%</b><span>Uptime</span></div>
+      <div class="metric"><b>4.8 kW</b><span>Energy</span></div>
+      <div class="metric"><b>68%</b><span>Compute</span></div>
+      <div class="metric y"><b>3</b><span>Alerts</span></div>
+      <div class="metric"><b>5</b><span>Updates</span></div>
+      <div class="metric"><b>7</b><span>Unread</span></div>
+    </div>
+
+    <div class="sec-title">Projects</div>
+    <div class="apps">
+      <button class="app" data-name="Cellular Automata Visualizer" data-status="Active" data-progress="74" data-agents="4" data-unread="3" style="--st:var(--green)">
+        <div class="app-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor"/></svg><span class="app-badge">3</span></div>
+        <div class="app-name">Cellular Automata Visualizer</div>
+      </button>
+      <button class="app" data-name="Superformula Renderer" data-status="In progress" data-progress="45" data-agents="2" data-unread="1" style="--st:var(--blue)">
+        <div class="app-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 9l-5 4.4L17.5 21 12 17l-5.5 4L8 13.4 3 9l6.6-.4z"/></svg><span class="app-badge">1</span></div>
+        <div class="app-name">Superformula Renderer</div>
+      </button>
+      <button class="app" data-name="Chladni Pattern Batch" data-status="Active" data-progress="91" data-agents="1" data-unread="0" style="--st:var(--green)">
+        <div class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></div>
+        <div class="app-name">Chladni Pattern Batch</div>
+      </button>
+      <button class="app" data-name="Data Sync Pipeline" data-status="Paused" data-progress="30" data-agents="0" data-unread="2" style="--st:var(--yellow)">
+        <div class="app-icon"><svg viewBox="0 0 24 24"><path d="M20 8a8 8 0 0 0-14-2M4 4v4h4M4 16a8 8 0 0 0 14 2m2 2v-4h-4"/></svg><span class="app-badge">2</span></div>
+        <div class="app-name">Data Sync Pipeline</div>
+      </button>
+    </div>
+
+    <button class="more-btn" id="detailsBtn">Show details</button>
+
+    <div class="sheet" id="projectSheet" hidden>
+      <div class="sheet-card">
+        <button class="sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+        <div class="sheet-head">
+          <div class="app-icon" id="sheetIcon"></div>
+          <div><div class="sheet-title" id="sheetTitle"></div><div class="sheet-status" id="sheetStatus"></div></div>
+        </div>
+        <div class="bar-outer"><div class="bar-inner" id="sheetBar"></div></div>
+        <div class="sheet-stats">
+          <div><b id="sheetProgress"></b><span>Progress</span></div>
+          <div><b id="sheetAgents"></b><span>Agents</span></div>
+          <div><b id="sheetUnread"></b><span>Unread</span></div>
+        </div>
+        <div class="sheet-placeholder">Project view goes here once it is built</div>
+      </div>
+    </div>
+
+    <div class="details" id="detailsPanel" hidden>
     <div class="grid">
 
       <!-- LEFT COLUMN -->
@@ -916,6 +1016,7 @@
     </div>
 
     <footer class="note">Level 0 — Universal overview. Drill into a project for agents, data, and simulation detail.</footer>
+    </div>
   </div>
 </div>
 
@@ -977,6 +1078,33 @@
       });
     });
   }
+
+  // Minimal home: details toggle + project sheet
+  const detailsBtn = document.getElementById('detailsBtn');
+  const detailsPanel = document.getElementById('detailsPanel');
+  detailsBtn.addEventListener('click', ()=>{
+    detailsPanel.hidden = !detailsPanel.hidden;
+    detailsBtn.textContent = detailsPanel.hidden ? 'Show details' : 'Hide details';
+  });
+  const sheet = document.getElementById('projectSheet');
+  document.querySelectorAll('.app').forEach(app=>{
+    app.addEventListener('click', ()=>{
+      const d = app.dataset;
+      sheet.style.setProperty('--st', app.style.getPropertyValue('--st'));
+      document.getElementById('sheetIcon').innerHTML = app.querySelector('svg').outerHTML;
+      document.getElementById('sheetTitle').textContent = d.name;
+      document.getElementById('sheetStatus').textContent = d.status;
+      document.getElementById('sheetBar').style.width = d.progress + '%';
+      document.getElementById('sheetProgress').textContent = d.progress + '%';
+      document.getElementById('sheetAgents').textContent = d.agents;
+      document.getElementById('sheetUnread').textContent = d.unread;
+      sheet.hidden = false;
+    });
+  });
+  const closeSheet = ()=>{ sheet.hidden = true; };
+  document.getElementById('sheetClose').addEventListener('click', closeSheet);
+  sheet.addEventListener('click', e=>{ if(e.target === sheet) closeSheet(); });
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeSheet(); });
 </script>
 </body>
 </html>
