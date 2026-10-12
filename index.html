@@ -6,7 +6,7 @@
 <title>AI Data Base — Home</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg: #0a0a0c;
@@ -479,8 +479,6 @@
   .metric span{ display:block; font-size:11px; color:var(--text-dim); margin-top:3px; }
   .metric.g b{ color:var(--green); } .metric.y b{ color:var(--yellow); }
   .sec-title{ margin:34px 4px 0; font-size:13px; font-weight:600; color:var(--text-dim); }
-  .apps{ display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:30px 16px; margin-top:20px; justify-items:center; }
-  .app{ background:none; border:0; color:inherit; font-family:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:12px; }
   .app-icon{
     position:relative; width:104px; height:104px; border-radius:30px; display:grid; place-items:center;
     background:linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06));
@@ -489,11 +487,8 @@
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 16px 32px rgba(0,0,0,0.35);
     color:var(--st,var(--green)); transition:transform .2s ease, box-shadow .2s ease;
   }
-  .app:hover .app-icon{ transform:translateY(-5px) scale(1.05); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 26px 44px rgba(0,0,0,0.42); }
   .app-icon svg{ width:46px; height:46px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
   .app-icon::after{ content:""; position:absolute; left:50%; bottom:9px; width:18px; height:4px; margin-left:-9px; border-radius:99px; background:var(--st,var(--green)); }
-  .app-badge{ position:absolute; top:-6px; right:-6px; min-width:22px; height:22px; padding:0 6px; border-radius:99px; background:var(--red); color:#fff; font:600 11px 'JetBrains Mono',monospace; display:flex; align-items:center; justify-content:center; border:2px solid rgba(10,14,6,0.6); }
-  .app-name{ font-size:12.5px; font-weight:500; max-width:116px; text-align:center; line-height:1.3; }
   .more-btn{ display:block; margin:40px auto 0; padding:9px 18px; border-radius:99px; font:500 12px 'Space Grotesk',sans-serif; color:var(--text); cursor:pointer; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.24); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
   .more-btn:hover{ background:rgba(255,255,255,0.2); }
   .details{ margin-top:22px; }
@@ -512,6 +507,74 @@
   .sheet-stats b{ display:block; font:600 18px 'JetBrains Mono',monospace; }
   .sheet-stats span{ font-size:11px; color:var(--text-dim); }
   .sheet-placeholder{ border:1px dashed rgba(255,255,255,0.3); border-radius:var(--radius-md); padding:26px; text-align:center; font-size:12px; color:var(--text-faint); }
+
+  /* ===== Reference-style thin line charts ===== */
+  .trend-value .n{ font-family:'Space Grotesk',sans-serif; font-weight:300; font-size:44px; line-height:1; }
+  .trend-value .n .dim{ color:var(--text-faint); }
+  .trend-value .n small{ font-size:16px; font-weight:300; margin-left:6px; color:var(--text-faint); }
+  .trend-days,.load-chart-labels{ display:none; }
+  .trend-value + svg{ display:block; }
+
+  /* ===== Four sections: metrics, projects, alerts, settings ===== */
+  html{ scroll-behavior:smooth; scroll-padding-top:84px; }
+  .details, #detailsBtn{ display:none !important; }
+  .sidebar a[data-label="Agents"], .sidebar a[data-label="Data"], .sidebar a[data-label="Simulations"]{ display:none; }
+  #perfPanel{ margin-top:14px; display:grid; gap:14px; }
+  #perfPanel[hidden]{ display:none; }
+  .sec-title .count{ margin-left:8px; font-weight:500; color:var(--text-faint); }
+  .list{ margin-top:14px; border-radius:var(--radius-lg); overflow:hidden; background:linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05)); backdrop-filter:blur(30px) saturate(190%); -webkit-backdrop-filter:blur(30px) saturate(190%); border:1px solid rgba(255,255,255,0.28); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 14px 40px rgba(0,0,0,0.3); }
+  .row{ display:flex; align-items:center; gap:14px; padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.12); }
+  .row:last-child{ border-bottom:0; }
+  .row i{ width:9px; height:9px; border-radius:50%; flex:none; }
+  .row b{ display:block; font-size:13px; font-weight:500; }
+  .row span{ display:block; font-size:11.5px; color:var(--text-dim); margin-top:2px; }
+  .row em{ margin-left:auto; font-style:normal; font-size:11px; color:var(--text-faint); }
+  .row.link{ cursor:pointer; }
+  .row.link:hover{ background:rgba(255,255,255,0.08); }
+  .main{ padding-bottom:70px; }
+
+  /* ===== Plain neutral theme: color is reserved for status codes ===== */
+  :root{
+    --bg:#121212; --bg-elev:#1a1a1a;
+    --text:#f2f2f2; --text-dim:#a8a8a8; --text-faint:#7a7a7a;
+    --blue:#d4d4d4; --blue-dim:rgba(255,255,255,0.12);
+    --purple:#d4d4d4; --purple-dim:rgba(255,255,255,0.12);
+  }
+  body{ background:#121212; }
+  body::before{
+    background:
+      radial-gradient(circle 420px at 12% 8%, rgba(255,255,255,0.20), transparent 70%),
+      radial-gradient(circle 380px at 88% 18%, rgba(255,255,255,0.12), transparent 70%),
+      radial-gradient(circle 440px at 78% 92%, rgba(255,255,255,0.14), transparent 70%),
+      radial-gradient(circle 360px at 14% 86%, rgba(255,255,255,0.10), transparent 70%);
+    filter: blur(50px);
+  }
+  .sheet .bar-inner{ background:var(--st,#d4d4d4); }
+
+  /* ===== Active device cards ===== */
+  .devices{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-top:16px; }
+  .dev{
+    text-align:left; color:inherit; font-family:inherit; cursor:pointer; padding:18px;
+    border-radius:var(--radius-lg); display:flex; flex-direction:column; gap:12px;
+    background:linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05));
+    backdrop-filter:blur(30px) saturate(190%); -webkit-backdrop-filter:blur(30px) saturate(190%);
+    border:1px solid rgba(255,255,255,0.28);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 14px 40px rgba(0,0,0,0.3);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .dev:hover{ transform:translateY(-4px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 24px 50px rgba(0,0,0,0.4); }
+  .dev-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .dev-name{ font-size:14px; font-weight:500; }
+  .dev-id{ font-size:11px; color:var(--text-dim); margin-top:2px; }
+  .dev-state{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dim); padding:4px 10px; border:1px solid rgba(255,255,255,0.2); border-radius:99px; white-space:nowrap; }
+  .dev-state i{ width:7px; height:7px; border-radius:50%; background:var(--st); }
+  .dev-art{ color:var(--st); display:flex; justify-content:center; padding:6px 0; }
+  .dev-art svg{ width:150px; height:auto; fill:none; stroke:currentColor; stroke-width:1.2; stroke-linecap:round; stroke-linejoin:round; }
+  .dev-tags{ display:flex; gap:14px; font-size:11px; color:var(--text-dim); }
+  .dev-line{ display:block; width:100%; }
+  .dev-kpis{ display:flex; gap:28px; }
+  .dev-kpis b{ display:block; font:300 22px 'Space Grotesk',sans-serif; }
+  .dev-kpis span{ font-size:11px; color:var(--text-dim); }
 </style>
 </head>
 <body>
@@ -572,6 +635,9 @@
   </div>
 
   <div class="main">
+    <div class="sec-title" id="perf" style="margin:0 4px 14px; display:flex; align-items:center; justify-content:space-between;">Performance metrics
+      <select class="view-select" id="perfView"><option value="numbers">Numbers</option><option value="trends">Trends</option><option value="energy">Energy sources</option></select>
+    </div>
     <div class="metrics">
       <div class="metric"><b>12</b><span>Projects</span></div>
       <div class="metric"><b>4</b><span>Agents</span></div>
@@ -584,24 +650,23 @@
       <div class="metric"><b>7</b><span>Unread</span></div>
     </div>
 
-    <div class="sec-title">Projects</div>
-    <div class="apps">
-      <button class="app" data-name="Cellular Automata Visualizer" data-status="Active" data-progress="74" data-agents="4" data-unread="3" style="--st:var(--green)">
-        <div class="app-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor"/></svg><span class="app-badge">3</span></div>
-        <div class="app-name">Cellular Automata Visualizer</div>
-      </button>
-      <button class="app" data-name="Superformula Renderer" data-status="In progress" data-progress="45" data-agents="2" data-unread="1" style="--st:var(--blue)">
-        <div class="app-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 9l-5 4.4L17.5 21 12 17l-5.5 4L8 13.4 3 9l6.6-.4z"/></svg><span class="app-badge">1</span></div>
-        <div class="app-name">Superformula Renderer</div>
-      </button>
-      <button class="app" data-name="Chladni Pattern Batch" data-status="Active" data-progress="91" data-agents="1" data-unread="0" style="--st:var(--green)">
-        <div class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></div>
-        <div class="app-name">Chladni Pattern Batch</div>
-      </button>
-      <button class="app" data-name="Data Sync Pipeline" data-status="Paused" data-progress="30" data-agents="0" data-unread="2" style="--st:var(--yellow)">
-        <div class="app-icon"><svg viewBox="0 0 24 24"><path d="M20 8a8 8 0 0 0-14-2M4 4v4h4M4 16a8 8 0 0 0 14 2m2 2v-4h-4"/></svg><span class="app-badge">2</span></div>
-        <div class="app-name">Data Sync Pipeline</div>
-      </button>
+    <div id="perfPanel" hidden></div>
+    <div class="sec-title" id="projects">Active devices <span class="count" id="deviceCount"></span></div>
+    <div class="devices" id="deviceGrid"></div>
+
+    <div class="sec-title" id="alerts">Alerts &amp; notifications <span class="count">7 unread</span></div>
+    <div class="list">
+      <div class="row"><i style="background:var(--red)"></i><div><b>Battery 3 charge is low</b><span>29% remaining</span></div><em>4 min ago</em></div>
+      <div class="row"><i style="background:var(--yellow)"></i><div><b>Data Sync Pipeline paused</b><span>Needs a manual restart</span></div><em>1 hr ago</em></div>
+      <div class="row"><i style="background:var(--blue)"></i><div><b>5 updates available</b><span>System and agents</span></div><em>Today</em></div>
+    </div>
+
+    <div class="sec-title" id="settings">Settings</div>
+    <div class="list">
+      <div class="row link"><div><b>Approved email senders</b><span>Only these senders can file work into projects</span></div><em>&rsaquo;</em></div>
+      <div class="row link"><div><b>Bluetooth devices</b><span>Not connected</span></div><em>&rsaquo;</em></div>
+      <div class="row link"><div><b>Notification rules</b><span>Choose what raises an alert</span></div><em>&rsaquo;</em></div>
+      <div class="row link"><div><b>Appearance</b><span>Glass theme</span></div><em>&rsaquo;</em></div>
     </div>
 
     <button class="more-btn" id="detailsBtn">Show details</button>
@@ -613,13 +678,9 @@
           <div class="app-icon" id="sheetIcon"></div>
           <div><div class="sheet-title" id="sheetTitle"></div><div class="sheet-status" id="sheetStatus"></div></div>
         </div>
-        <div class="bar-outer"><div class="bar-inner" id="sheetBar"></div></div>
-        <div class="sheet-stats">
-          <div><b id="sheetProgress"></b><span>Progress</span></div>
-          <div><b id="sheetAgents"></b><span>Agents</span></div>
-          <div><b id="sheetUnread"></b><span>Unread</span></div>
-        </div>
-        <div class="sheet-placeholder">Project view goes here once it is built</div>
+        <svg id="sheetChart"></svg>
+        <div class="sheet-stats" id="sheetStats"></div>
+        <div class="sheet-placeholder">Live device data appears here once it is connected</div>
       </div>
     </div>
 
@@ -695,7 +756,7 @@
             </div>
           </div>
           <div class="trend-value">
-            <div class="n">4.8 kW</div>
+            <div class="n">4<span class="dim">.8</span><small>kW</small></div>
             <div class="d">↓ 6.2% vs last week</div>
           </div>
           <svg width="100%" height="72" viewBox="0 0 400 72" preserveAspectRatio="none">
@@ -1087,24 +1148,98 @@
     detailsBtn.textContent = detailsPanel.hidden ? 'Show details' : 'Hide details';
   });
   const sheet = document.getElementById('projectSheet');
-  document.querySelectorAll('.app').forEach(app=>{
-    app.addEventListener('click', ()=>{
-      const d = app.dataset;
-      sheet.style.setProperty('--st', app.style.getPropertyValue('--st'));
-      document.getElementById('sheetIcon').innerHTML = app.querySelector('svg').outerHTML;
-      document.getElementById('sheetTitle').textContent = d.name;
-      document.getElementById('sheetStatus').textContent = d.status;
-      document.getElementById('sheetBar').style.width = d.progress + '%';
-      document.getElementById('sheetProgress').textContent = d.progress + '%';
-      document.getElementById('sheetAgents').textContent = d.agents;
-      document.getElementById('sheetUnread').textContent = d.unread;
-      sheet.hidden = false;
-    });
+  // Active devices: data-driven cards (to be fed by the master database later)
+  const icons = {
+    battery:'<svg viewBox="0 0 64 36"><rect x="2" y="4" width="54" height="28" rx="5"/><path d="M60 13v10"/><path d="M10 12v12M18 12v12M26 12v12M34 12v12"/></svg>',
+    line:'<svg viewBox="0 0 64 36"><rect x="2" y="20" width="60" height="8" rx="4"/><circle cx="12" cy="28" r="3"/><circle cx="32" cy="28" r="3"/><circle cx="52" cy="28" r="3"/><rect x="10" y="8" width="12" height="10" rx="2"/><rect x="38" y="8" width="12" height="10" rx="2"/></svg>',
+    transport:'<svg viewBox="0 0 64 36"><rect x="2" y="6" width="58" height="22" rx="5"/><path d="M2 18h58M20 6v12M40 6v12"/><circle cx="16" cy="30" r="3.5"/><circle cx="46" cy="30" r="3.5"/></svg>'
+  };
+  const devices = [
+    {name:'Battery 1', id:'B-01', type:'Energy', active:true, st:'var(--green)', icon:'battery', link:'Bluetooth', seed:11, kpis:[['Charge','82%'],['Output','1.9 kW'],['Temp','31\u00b0C']]},
+    {name:'Battery 2', id:'B-02', type:'Energy', active:true, st:'var(--yellow)', icon:'battery', link:'Bluetooth', seed:12, kpis:[['Charge','54%'],['Output','1.4 kW'],['Temp','34\u00b0C']]},
+    {name:'Battery 3', id:'B-03', type:'Energy', active:true, st:'var(--red)', icon:'battery', link:'Bluetooth', seed:13, kpis:[['Charge','29%'],['Output','1.5 kW'],['Temp','38\u00b0C']]},
+    {name:'Assembly Line 4', id:'L-04', type:'Assembly', active:true, st:'var(--green)', icon:'line', link:'Local', seed:14, kpis:[['OEE','92.4%'],['Cycle','18.2 s'],['Temp','24.8\u00b0C']]},
+    {name:'Transport Unit 12', id:'T-12', type:'Transportation', active:false, st:'var(--text-faint)', icon:'transport', link:'Local', seed:15, kpis:[['Load','-'],['Speed','-'],['Temp','-']]}
+  ];
+  const deviceGrid = document.getElementById('deviceGrid');
+  const activeDevices = devices.filter(d=>d.active);
+  document.getElementById('deviceCount').textContent = activeDevices.length + ' of ' + devices.length + ' active';
+  const kpiHtml = list => list.map(k=>'<div><b>'+k[1]+'</b><span>'+k[0]+'</span></div>').join('');
+  activeDevices.forEach(d=>{
+    const el = document.createElement('button');
+    el.className = 'dev';
+    el.style.setProperty('--st', d.st);
+    el.innerHTML = '<div class="dev-top"><div><div class="dev-name">'+d.name+'</div><div class="dev-id">'+d.id+' \u00b7 '+d.type+'</div></div><span class="dev-state"><i></i>Online</span></div>'
+      + '<div class="dev-art">'+icons[d.icon]+'</div>'
+      + '<div class="dev-tags"><span>'+d.link+'</span><span>Private</span></div>'
+      + '<svg class="dev-line"></svg>'
+      + '<div class="dev-kpis">'+kpiHtml(d.kpis.slice(0,2))+'</div>';
+    deviceGrid.appendChild(el);
+    lineChart(el.querySelector('.dev-line'),{w:260,h:44,seed:d.seed,base:[.4,.55,.48,.66,.58,.74,.66,.8],noise:.2,n:90});
+    el.addEventListener('click', ()=>openDevice(d));
   });
+  function openDevice(d){
+    sheet.style.setProperty('--st', d.st);
+    document.getElementById('sheetIcon').innerHTML = icons[d.icon];
+    document.getElementById('sheetTitle').textContent = d.name;
+    document.getElementById('sheetStatus').textContent = 'Online \u00b7 ' + d.type;
+    document.getElementById('sheetStats').innerHTML = kpiHtml(d.kpis);
+    lineChart(document.getElementById('sheetChart'),{w:480,h:170,seed:d.seed,base:[.4,.5,.45,.62,.55,.7,.66,.8],noise:.14,axis:['100%','75%','50%','25%'],target:.6,dots:[.4,.78],xl:['06:00','12:00','18:00','now']});
+    sheet.hidden = false;
+  }
   const closeSheet = ()=>{ sheet.hidden = true; };
   document.getElementById('sheetClose').addEventListener('click', closeSheet);
   sheet.addEventListener('click', e=>{ if(e.target === sheet) closeSheet(); });
   document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeSheet(); });
+
+  // Thin, noisy reference-style line charts. Neutral white for now; the AI will color-code later.
+  function seeded(s){ return ()=>{ s|=0; s=s+0x6D2B79F5|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+  function lineChart(svg,o){
+    const W=o.w,H=o.h,padR=o.axis?46:0,padB=o.xl?22:0,pw=W-padR,ph=H-padB,N=o.n||150,rnd=seeded(o.seed),b=o.base,pts=[];
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+    svg.removeAttribute('height');
+    svg.style.width='100%'; svg.style.height='auto'; svg.style.aspectRatio=W+' / '+H;
+    for(let i=0;i<N;i++){
+      const f=i/(N-1)*(b.length-1),k=Math.min(Math.floor(f),b.length-2),t=f-k,s=t*t*(3-2*t);
+      const v=b[k]+(b[k+1]-b[k])*s+(rnd()-0.5)*(o.noise||0.12);
+      pts.push([i/(N-1)*pw, ph-Math.max(0.03,Math.min(0.97,v))*ph]);
+    }
+    const lab='fill="rgba(255,255,255,0.5)" font-size="10" font-family="Space Grotesk,sans-serif"';
+    let g='';
+    if(o.axis){ o.axis.forEach((l,i)=>{ const y=ph*(0.1+0.8*i/(o.axis.length-1)); g+='<line x1="0" x2="'+pw+'" y1="'+y+'" y2="'+y+'" stroke="rgba(255,255,255,0.16)" stroke-dasharray="3 4"/><text x="'+(W-2)+'" y="'+(y+3)+'" text-anchor="end" '+lab+'>'+l+'</text>'; }); }
+    (o.bands||[]).forEach(x=>{ g+='<rect x="'+x[0]*pw+'" y="0" width="'+(x[1]-x[0])*pw+'" height="'+ph+'" fill="rgba(255,255,255,0.06)"/>'; });
+    if(o.target!=null){ const y=ph-o.target*ph; g+='<line x1="0" x2="'+pw+'" y1="'+y+'" y2="'+y+'" stroke="rgba(255,255,255,0.45)" stroke-dasharray="6 5"/>'; }
+    g+='<polyline points="'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+'" fill="none" stroke="rgba(255,255,255,0.72)" stroke-width="1" stroke-linejoin="round"/>';
+    (o.dots||[]).forEach(d=>{ const p=pts[Math.round(d*(N-1))]; g+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3" fill="#fff"/>'; });
+    (o.xl||[]).forEach((l,i,a)=>{ g+='<text x="'+pw*i/(a.length-1)+'" y="'+(H-4)+'" text-anchor="'+(i===0?'start':i===a.length-1?'end':'middle')+'" '+lab+'>'+l+'</text>'; });
+    svg.innerHTML=g;
+  }
+  const trendSvg=document.querySelector('.trend-value + svg');
+  if(trendSvg) lineChart(trendSvg,{w:600,h:190,seed:7,base:[.45,.55,.5,.7,.62,.78,.7,.85],noise:.14,axis:['6 kW','5','4','3'],target:.62,bands:[[.28,.38],[.66,.76]],dots:[.33,.71,.9],xl:['MON','TUE','WED','THU','FRI','SAT','SUN']});
+  const heroSvg=document.querySelector('#heroChartView svg');
+  if(heroSvg) lineChart(heroSvg,{w:600,h:170,seed:21,base:[.4,.5,.45,.62,.55,.7,.66,.8],noise:.14,axis:['100%','75%','50%','25%'],target:.6,dots:[.4,.78],xl:['00:00','06:00','12:00','18:00','now']});
+  const sparkSvg=document.querySelector('.hl.featured svg.spark');
+  if(sparkSvg) lineChart(sparkSvg,{w:200,h:40,seed:3,base:[.4,.5,.46,.62,.56,.7,.64,.78],noise:.2,n:70});
+
+  // Four sections: move the charts under Performance metrics so no data is shown twice
+  const perfPanel = document.getElementById('perfPanel');
+  const trendsCard = document.querySelector('.trend-value').closest('.card');
+  const energyCard = document.getElementById('energyViewSelect').closest('.card');
+  perfPanel.append(trendsCard, energyCard);
+  document.getElementById('perfView').addEventListener('change', e=>{
+    const v = e.target.value;
+    perfPanel.hidden = (v === 'numbers');
+    trendsCard.hidden = (v !== 'trends');
+    energyCard.hidden = (v !== 'energy');
+  });
+  const navMap = { Home:['#perf','Performance metrics'], Projects:['#projects','Devices'], Notifications:['#alerts','Alerts'], Files:['#settings','Settings'] };
+  document.querySelectorAll('.sidebar a').forEach(a=>{
+    const m = navMap[a.dataset.label];
+    if(m){ a.setAttribute('href', m[0]); a.dataset.label = m[1]; }
+  });
+  const settingsLink = document.querySelector('.sidebar a[data-label="Settings"]');
+  if(settingsLink){ settingsLink.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>'; }
 </script>
 </body>
 </html>
