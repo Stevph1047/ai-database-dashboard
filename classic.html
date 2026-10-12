@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Data Base — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0c;
+    --bg-elev: #101013;
+    --surface: rgba(255,255,255,0.028);
+    --surface-strong: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.08);
+    --border-soft: rgba(255,255,255,0.05);
+    --text: #e4e4e7;
+    --text-dim: #8b8b93;
+    --text-faint: #57575f;
+    --blue: #5b9dd9;
+    --blue-dim: rgba(91,157,217,0.12);
+    --purple: #9584c9;
+    --purple-dim: rgba(149,132,201,0.12);
+    --green: #5fb88a;
+    --green-dim: rgba(95,184,138,0.12);
+    --orange: #d99a5b;
+    --red: #d9705b;
+    --radius-lg: 26px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+  }
+  :root:not([data-theme="light"]){ color-scheme: dark; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ height:100%; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100%;
+  }
+  .mono{ font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* ---- Top nav ---- */
+  .topnav{
+    display:flex; align-items:center; gap:28px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--border-soft);
+    background: rgba(8,9,13,0.75);
+    backdrop-filter: blur(14px);
+    position: sticky; top:0; z-index: 20;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:600; font-size:15px; letter-spacing:0.2px; white-space:nowrap; }
+  .brand .mark{
+    width:26px; height:26px; border-radius:7px;
+    background: var(--blue);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .brand .mark::after{
+    content:""; position:absolute; inset:8px; border-radius:2px; background: var(--bg-elev);
+  }
+  .brand small{ color:var(--text-dim); font-weight:500; font-size:11px; letter-spacing:0.5px; }
+
+  .searchbar{
+    flex:1; max-width: 480px;
+    display:flex; align-items:center; gap:9px;
+    background: var(--surface); border:1px solid var(--border);
+    border-radius: 10px; padding: 9px 13px;
+    color: var(--text-faint); font-size: 13px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .searchbar:hover{ border-color: rgba(255,255,255,0.16); background: var(--surface-strong); }
+  .searchbar svg{ flex-shrink:0; opacity:0.7; }
+  .searchbar kbd{
+    margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    color:var(--text-dim); background:rgba(255,255,255,0.06); border:1px solid var(--border);
+    border-radius:5px; padding:2px 6px;
+  }
+
+  .navlinks{ display:flex; gap:4px; margin-left: 6px; }
+  .navlinks a{
+    color:var(--text-dim); text-decoration:none; font-size:13.5px; font-weight:500;
+    padding:7px 12px; border-radius:8px; transition: color .15s ease, background .15s ease;
+  }
+  .navlinks a:hover{ color:var(--text); background: var(--surface); }
+  .navlinks a.active{ color:var(--text); background: var(--surface-strong); }
+
+  .navright{ display:flex; align-items:center; gap:14px; margin-left:auto; }
+  .icon-btn{
+    width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); background:var(--surface); border:1px solid var(--border-soft);
+    cursor:pointer; transition: color .15s ease, background .15s ease; position:relative;
+  }
+  .icon-btn:hover{ color:var(--text); background:var(--surface-strong); }
+  .icon-btn .dot{
+    position:absolute; top:6px; right:6px; width:6px; height:6px; border-radius:50%;
+    background: var(--orange); box-shadow: 0 0 0 2px var(--bg);
+  }
+  .avatar{
+    width:30px; height:30px; border-radius:8px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+  }
+
+  /* ---- Layout ---- */
+  .shell{ display:grid; grid-template-columns: 68px 1fr; min-height: calc(100vh - 61px); }
+
+  .sidebar{
+    border-right:1px solid var(--border-soft);
+    padding: 20px 0;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .sidebar a{
+    display:flex; align-items:center; justify-content:center;
+    width:40px; height:40px;
+    color:var(--text-dim); text-decoration:none;
+    border-radius:12px; transition: color .15s ease, background .15s ease;
+    position:relative;
+  }
+  .sidebar a::after{
+    content: attr(data-label);
+    position:absolute; left:52px; top:50%; transform:translateY(-50%);
+    background: var(--bg-elev); border:1px solid var(--border); color:var(--text);
+    font-size:11.5px; font-weight:500; padding:5px 9px; border-radius:7px;
+    white-space:nowrap; opacity:0; pointer-events:none; transition: opacity .12s ease;
+    z-index:30;
+  }
+  .sidebar a:hover::after{ opacity:1; }
+  .sidebar a svg{ opacity:0.75; flex-shrink:0; }
+  .sidebar a:hover{ color:var(--text); background: var(--surface); }
+  .sidebar a.active{ color: var(--text); background: var(--blue-dim); }
+  .sidebar a.active svg{ opacity:1; color: var(--blue); }
+  .sidebar .spacer{ flex:1; }
+  .sidebar .sb-avatar{
+    width:34px; height:34px; border-radius:10px; margin-top:4px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;
+  }
+
+  .main{ padding: 22px 26px 40px; max-width: 1400px; }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 980px){
+    .shell{ grid-template-columns: 1fr; }
+    .sidebar{ display:none; }
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+  }
+  .card-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px; }
+  .card-title{ font-size:13px; font-weight:600; letter-spacing:0.2px; color:var(--text); }
+  .card-sub{ font-size:11.5px; color:var(--text-faint); }
+
+  /* ---- Hero card ---- */
+  .hero{
+    position:relative; overflow:hidden;
+    background: var(--surface);
+  }
+  .hero-top{ display:flex; align-items:center; justify-content:space-between; }
+  .hero-title{ font-size:14px; font-weight:700; letter-spacing:0.3px; }
+  .status-pill{
+    display:flex; align-items:center; gap:7px;
+    font-size:11.5px; font-weight:500; color:var(--green);
+    background: var(--green-dim); border:1px solid rgba(69,224,168,0.25);
+    padding:5px 11px; border-radius:99px;
+  }
+  .status-pill .pulse{
+    width:6px; height:6px; border-radius:50%; background:var(--green);
+  }
+
+  .load-chart-wrap{ padding: 6px 2px 4px; overflow-x:auto; }
+  .load-chart-wrap svg{ min-width:460px; }
+  .load-chart-labels{ display:flex; justify-content:space-between; font-size:10px; color:var(--text-faint); font-family:'JetBrains Mono',monospace; margin-top:6px; min-width:460px; }
+  .view-select{
+    appearance:none; -webkit-appearance:none;
+    background: var(--surface); border:1px solid var(--border-soft);
+    color:var(--text-dim); font-size:11px; font-weight:500; font-family:'Space Grotesk',sans-serif;
+    padding:6px 24px 6px 10px; border-radius:8px; cursor:pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238b8b93' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position: right 8px center;
+  }
+  .view-select:hover{ color:var(--text); background-color:var(--surface-strong); }
+
+  .hero-metrics{
+    display:grid; grid-template-columns: repeat(4,1fr); gap:10px; margin-top:6px;
+  }
+  .hm{ text-align:center; padding: 10px 4px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.02); }
+  .hm .v{ font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:600; }
+  .hm .l{ font-size:10.5px; color:var(--text-dim); margin-top:3px; }
+  .hm.blue .v{ color: var(--blue); }
+  .hm.purple .v{ color: var(--purple); }
+  .hm.green .v{ color: var(--green); }
+
+  .hero-foot{
+    display:flex; align-items:center; justify-content:space-between; margin-top:16px;
+    padding-top:14px; border-top:1px solid var(--border-soft);
+    font-size:11.5px; color:var(--text-dim);
+  }
+  .hero-foot span.mono{ color:var(--text-dim); }
+  .hero-cmd{
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,0.03); border:1px solid var(--border);
+    border-radius:9px; padding:8px 12px; margin-top:14px;
+    color:var(--text-faint); font-size:12.5px;
+  }
+  .hero-cmd kbd{
+    margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:10px;
+    background:rgba(255,255,255,0.07); border:1px solid var(--border); border-radius:5px; padding:2px 6px;
+  }
+
+  /* ---- Highlights ---- */
+  .hl-grid{
+    display:grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap:10px;
+  }
+  .hl.featured{ grid-row: span 2; display:flex; flex-direction:column; justify-content:space-between; }
+  .hl.featured .hl-val{ font-size:26px; }
+  .hl{
+    background: rgba(255,255,255,0.025); border:1px solid var(--border-soft);
+    border-radius: var(--radius-md); padding: 13px 14px;
+  }
+  .hl-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .hl-label{ font-size:11px; color:var(--text-dim); font-weight:500; }
+  .hl-val{ font-family:'JetBrains Mono',monospace; font-size:19px; font-weight:600; }
+  .hl.warn .hl-val{ color: var(--orange); }
+  .spark{ display:block; margin-top:6px; }
+  .gauge-wrap{ display:flex; align-items:center; gap:10px; }
+  .gauge{ width:38px; height:38px; }
+
+  /* ---- Trends ---- */
+  .tabs{ display:flex; gap:4px; background:rgba(255,255,255,0.03); border:1px solid var(--border-soft); border-radius:9px; padding:3px; }
+  .tab{
+    font-size:11.5px; font-weight:500; color:var(--text-dim); padding:6px 11px;
+    border-radius:6px; cursor:pointer; transition: color .15s ease, background .15s ease;
+  }
+  .tab.active{ color:var(--text); background: var(--surface-strong); }
+  .trend-value{ display:flex; align-items:baseline; gap:8px; margin: 14px 0 10px; }
+  .trend-value .n{ font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:600; }
+  .trend-value .d{ font-size:11.5px; color:var(--green); font-weight:500; }
+  .trend-days{ display:flex; justify-content:space-between; margin-top:8px; font-size:10px; color:var(--text-faint); font-family:'JetBrains Mono',monospace; }
+
+  /* ---- Activity ---- */
+  .feed{ display:flex; flex-direction:column; }
+  .feed-item{
+    display:flex; gap:11px; align-items:flex-start;
+    padding: 10px 0; border-bottom: 1px solid var(--border-soft);
+  }
+  .feed-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .feed-dot{ width:7px; height:7px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+  .feed-item.blue .feed-dot{ background:var(--blue); }
+  .feed-item.purple .feed-dot{ background:var(--purple); }
+  .feed-item.green .feed-dot{ background:var(--green); }
+  .feed-item.orange .feed-dot{ background:var(--orange); }
+  .feed-text{ font-size:12.5px; color:var(--text); line-height:1.4; }
+  .feed-text b{ font-weight:600; }
+  .feed-time{ font-size:10.5px; color:var(--text-faint); margin-top:2px; font-family:'JetBrains Mono',monospace; }
+  .feed-content{ flex:1; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .feed-visual-placeholder{
+    width:40px; height:40px; border-radius:8px; flex-shrink:0;
+    border: 1px dashed var(--border);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--text-faint); background: rgba(255,255,255,0.015);
+  }
+
+  /* ---- Projects dropdown card ---- */
+  .proj-row{ display:flex; justify-content:space-between; align-items:center; padding:7px 0; font-size:12.5px; }
+  .proj-row .l{ color:var(--text-dim); }
+  .proj-row .v{ font-family:'JetBrains Mono',monospace; font-weight:600; }
+  .proj-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; }
+  .bar-outer{ height:5px; border-radius:99px; background:rgba(255,255,255,0.06); overflow:hidden; margin-top:10px; }
+  .bar-inner{ height:100%; border-radius:99px; background: linear-gradient(90deg, var(--blue), var(--purple)); width:67%; }
+  .view-all{
+    display:inline-flex; align-items:center; gap:6px; margin-top:14px;
+    font-size:12px; font-weight:500; color:var(--blue); text-decoration:none;
+    cursor:pointer;
+  }
+
+  .pcard-badge{
+    position:absolute; top:10px; right:10px;
+    min-width:19px; height:19px; padding:0 5px; border-radius:99px;
+    background: var(--red); color:#fff;
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pgrid{ display:grid; grid-template-columns: repeat(4,1fr); gap:14px; }
+  .pcard{
+    position:relative;
+    background: var(--surface); border:1px solid var(--border);
+    border-radius: var(--radius-md); padding:16px; cursor:pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .pcard:hover{ border-color: rgba(255,255,255,0.16); background: var(--surface-strong); }
+  .pcard-top{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .pcard-icon{
+    width:34px; height:34px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px;
+  }
+  .pcard-name{ font-size:13px; font-weight:600; }
+  .pcard-sub{ font-size:11px; color:var(--text-faint); margin-top:1px; }
+  .pcard-status{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:10.5px; font-weight:500; padding:3px 8px; border-radius:99px;
+    margin-bottom:10px;
+  }
+  .pcard-status.active{ color:var(--green); background:var(--green-dim); }
+  .pcard-status.progress{ color:var(--blue); background:var(--blue-dim); }
+  .pcard-status.paused{ color:var(--orange); background:rgba(217,154,91,0.12); }
+  .pcard .bar-outer{ margin-top:0; }
+  .pcard-pct{ display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-faint); margin-top:6px; font-family:'JetBrains Mono',monospace; }
+
+  /* ---- Energy Sources / digital twin ---- */
+  .batt-overall{ display:grid; grid-template-columns: repeat(3,1fr); gap:10px; }
+  .batt-chip{
+    background: rgba(255,255,255,0.025); border:1px solid var(--border-soft);
+    border-radius: var(--radius-sm); padding:12px; cursor:pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .batt-chip:hover{ border-color: rgba(255,255,255,0.16); }
+  .batt-chip-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .batt-chip-name{ font-size:11.5px; font-weight:500; color:var(--text-dim); }
+  .batt-icon{ width:20px; height:11px; border:1.5px solid var(--text-dim); border-radius:2px; position:relative; }
+  .batt-icon::after{ content:""; position:absolute; right:-4px; top:3px; width:2px; height:5px; background:var(--text-dim); border-radius:0 1px 1px 0; }
+  .batt-icon .fill{ position:absolute; left:1px; top:1px; bottom:1px; border-radius:1px; }
+  .batt-chip-val{ font-family:'JetBrains Mono',monospace; font-size:17px; font-weight:600; }
+  .batt-chip-sub{ font-size:10px; color:var(--text-faint); margin-top:2px; }
+
+  .batt-detail{ display:flex; gap:20px; align-items:center; }
+  .batt-twin{
+    width:64px; height:120px; border:2px solid var(--border); border-radius:8px;
+    position:relative; flex-shrink:0; background: rgba(255,255,255,0.015);
+  }
+  .batt-twin::before{
+    content:""; position:absolute; top:-7px; left:50%; transform:translateX(-50%);
+    width:22px; height:6px; background:var(--border); border-radius:2px 2px 0 0;
+  }
+  .batt-twin .fill{
+    position:absolute; left:2px; right:2px; bottom:2px; border-radius:5px;
+    transition: height .3s ease;
+  }
+  .batt-detail-stats{ flex:1; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .batt-stat .l{ font-size:10.5px; color:var(--text-dim); }
+  .batt-stat .v{ font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; margin-top:2px; }
+
+  footer.note{
+    max-width:1400px; margin: 26px 26px 0; padding-top:16px; border-top:1px solid var(--border-soft);
+    font-size:11px; color:var(--text-faint);
+  }
+
+  /* ===== Glass theme + semantic color coding ===== */
+  :root{
+    --bg:#0a0e06; --bg-elev:#10150b;
+    --surface:rgba(255,255,255,0.06); --surface-strong:rgba(255,255,255,0.10);
+    --border:rgba(255,255,255,0.14); --border-soft:rgba(255,255,255,0.09);
+    --text:#f4f7f1; --text-dim:#a9b3a2; --text-faint:#78826f;
+    --green:#20be35; --green-dim:rgba(32,190,53,0.18);
+    --yellow:#ffce06; --orange:#ffce06;
+    --red:#ff5a4f;
+    --blue:#b5fdce; --blue-dim:rgba(181,253,206,0.16);
+    --purple:#b5fdce; --purple-dim:rgba(181,253,206,0.16);
+  }
+  body{
+    background:
+      radial-gradient(900px 600px at 10% -5%, rgba(32,190,53,0.34), transparent 60%),
+      radial-gradient(800px 600px at 100% 100%, rgba(255,206,6,0.12), transparent 60%),
+      #0a0e06;
+    background-attachment: fixed;
+  }
+  .topnav{ background:rgba(255,255,255,0.05); backdrop-filter:blur(24px) saturate(140%); -webkit-backdrop-filter:blur(24px) saturate(140%); border-bottom:1px solid var(--border-soft); }
+  .sidebar{ background:rgba(255,255,255,0.03); }
+  .sidebar a.active{ background:rgba(32,190,53,0.22); }
+  .searchbar,.icon-btn,.view-select,.tabs{ background:rgba(255,255,255,0.07); border-color:var(--border); }
+  .card{
+    background:var(--surface);
+    backdrop-filter:blur(26px) saturate(150%); -webkit-backdrop-filter:blur(26px) saturate(150%);
+    border:1px solid var(--border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 10px 36px rgba(0,0,0,0.30);
+  }
+  .hl,.hm,.pcard,.batt-chip{ background:rgba(255,255,255,0.05); border:1px solid var(--border-soft); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); }
+  .hero{ background:var(--surface); }
+  footer.note{ display:none; }
+  svg polyline[stroke="#5b9dd9"]{ stroke:#b5fdce; }
+  svg stop[stop-color="#5b9dd9"]{ stop-color:#b5fdce; }
+  .hm:nth-child(4) .v{ color:var(--green); }
+  .batt-chip[data-target="b2"] .fill, #energyB2View .fill{ background:var(--yellow) !important; }
+  .batt-chip[data-target="b3"] .fill, #energyB3View .fill{ background:var(--red) !important; }
+  .feed .feed-item:nth-child(1) .feed-dot,.feed .feed-item:nth-child(3) .feed-dot{ background:var(--blue); }
+  .feed .feed-item:nth-child(2) .feed-dot,.feed .feed-item:nth-child(4) .feed-dot,.feed .feed-item:nth-child(5) .feed-dot{ background:var(--green); }
+  .pcard-status.paused{ color:var(--yellow); background:rgba(255,206,6,0.16); }
+  .pcard:nth-child(4) .pcard-icon{ background:rgba(255,206,6,0.16) !important; }
+  .pcard-badge{ color:#0a0e06; }
+  .pcard-badge:not([style]){ color:#fff; }
+  .legend{ display:flex; gap:14px; margin-left:8px; font-size:11px; color:var(--text-dim); white-space:nowrap; }
+  .legend i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+  @media (max-width:1100px){ .legend{ display:none; } }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="brand">
+    <div class="mark"></div>
+    <div>AI Data Base<br><small>Ubuntu System</small></div>
+  </div>
+  <div class="searchbar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    Search projects, files, agents, data or ask AI...
+    <kbd>⌘K</kbd>
+  </div>
+
+  <div class="legend"><span><i style="background:var(--green)"></i>Healthy</span><span><i style="background:var(--yellow)"></i>Attention</span><span><i style="background:var(--red)"></i>Critical</span><span><i style="background:var(--blue)"></i>Info</span></div>
+  <div class="navright">
+    <div class="icon-btn" title="Notifications">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      <div class="dot"></div>
+    </div>
+    <div class="icon-btn" title="Groupthinkers">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="icon-btn" title="Settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </div>
+    <div class="avatar">SH</div>
+  </div>
+</div>
+
+<div class="shell">
+  <div class="sidebar">
+    <a class="active" href="#" data-label="Home">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    </a>
+    <a href="#" data-label="Projects">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+    </a>
+    <a href="#" data-label="Agents">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+    </a>
+    <a href="#" data-label="Data">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+    </a>
+    <a href="#" data-label="Simulations">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
+    </a>
+    <a href="#" data-label="Files">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+    </a>
+    <div class="spacer"></div>
+    <a href="#" data-label="Notifications" style="position:relative;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      <div class="dot" style="position:absolute; top:6px; right:8px;"></div>
+    </a>
+    <div class="sb-avatar">SH</div>
+  </div>
+
+  <div class="main">
+    <div class="grid">
+
+      <!-- LEFT COLUMN -->
+      <div class="row-span2">
+
+        <!-- Hero -->
+        <div class="card hero">
+          <div class="hero-top">
+            <div class="hero-title">System activity</div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="status-pill"><span class="pulse"></span>All Systems Operational</div>
+              <select class="view-select" id="heroViewSelect">
+                <option value="numbers">Numbers</option>
+                <option value="chart">Chart</option>
+              </select>
+              <div class="icon-btn" style="width:32px;height:32px;background:rgba(255,255,255,0.05);" title="Search">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-metrics" id="heroNumbersView" style="margin-top:4px;">
+            <div class="hm blue"><div class="v">12</div><div class="l">Projects</div></div>
+            <div class="hm purple"><div class="v">4</div><div class="l">Active Agents</div></div>
+            <div class="hm green"><div class="v">8</div><div class="l">Systems Online</div></div>
+            <div class="hm"><div class="v">99.8%</div><div class="l">Uptime</div></div>
+          </div>
+
+          <div id="heroChartView" style="display:none;">
+            <div class="load-chart-wrap">
+              <svg width="100%" height="120" viewBox="0 0 460 120" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="loadFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#5b9dd9" stop-opacity="0.30"/>
+                    <stop offset="100%" stop-color="#5b9dd9" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+                  <line x1="0" y1="20" x2="460" y2="20"/>
+                  <line x1="0" y1="55" x2="460" y2="55"/>
+                  <line x1="0" y1="90" x2="460" y2="90"/>
+                </g>
+                <polyline points="0,78 28,72 57,80 85,60 114,66 142,48 171,54 200,38 228,44 257,30 285,40 314,26 342,34 371,22 400,29 428,18 460,24"
+                  fill="none" stroke="#5b9dd9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <polygon points="0,78 28,72 57,80 85,60 114,66 142,48 171,54 200,38 228,44 257,30 285,40 314,26 342,34 371,22 400,29 428,18 460,24 460,120 0,120"
+                  fill="url(#loadFill)"/>
+              </svg>
+              <div class="load-chart-labels">
+                <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>now</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-foot">
+            <span>Last checked 2 min ago</span>
+            <span class="mono">41d 06h uptime</span>
+          </div>
+        </div>
+
+        <!-- Trends -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">System Trends</div>
+            <div class="tabs">
+              <div class="tab active">Energy</div>
+              <div class="tab">Compute</div>
+              <div class="tab">Activity</div>
+              <div class="tab">Cost</div>
+            </div>
+          </div>
+          <div class="trend-value">
+            <div class="n">4.8 kW</div>
+            <div class="d">↓ 6.2% vs last week</div>
+          </div>
+          <svg width="100%" height="72" viewBox="0 0 400 72" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#46c9ff" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#46c9ff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <polyline points="0,50 57,38 114,44 171,20 228,30 285,14 342,24 400,10" fill="none" stroke="#46c9ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <polygon points="0,50 57,38 114,44 171,20 228,30 285,14 342,24 400,10 400,72 0,72" fill="url(#trendFill)"/>
+          </svg>
+          <div class="trend-days">
+            <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+          </div>
+        </div>
+
+        <!-- Energy Sources — digital twin -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Energy Sources</div>
+            <select class="view-select" id="energyViewSelect">
+              <option value="overall">Overall</option>
+              <option value="b1">Battery 1</option>
+              <option value="b2">Battery 2</option>
+              <option value="b3">Battery 3</option>
+            </select>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:14px; padding:7px 10px; border:1px dashed var(--border); border-radius:8px; background:rgba(255,255,255,0.015);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>
+            <span style="font-size:11px; color:var(--text-faint);">Bluetooth: not connected — pending hardware details</span>
+          </div>
+
+          <!-- Overall view: all sources at a glance -->
+          <div id="energyOverallView">
+            <div class="batt-overall">
+              <div class="batt-chip" data-target="b1">
+                <div class="batt-chip-top">
+                  <span class="batt-chip-name">Battery 1</span>
+                  <div class="batt-icon"><div class="fill" style="width:82%; background:var(--green);"></div></div>
+                </div>
+                <div class="batt-chip-val">82<span style="font-size:11px;color:var(--text-dim)">%</span></div>
+                <div class="batt-chip-sub">1.9 kW output</div>
+              </div>
+              <div class="batt-chip" data-target="b2">
+                <div class="batt-chip-top">
+                  <span class="batt-chip-name">Battery 2</span>
+                  <div class="batt-icon"><div class="fill" style="width:54%; background:var(--blue);"></div></div>
+                </div>
+                <div class="batt-chip-val">54<span style="font-size:11px;color:var(--text-dim)">%</span></div>
+                <div class="batt-chip-sub">1.4 kW output</div>
+              </div>
+              <div class="batt-chip" data-target="b3">
+                <div class="batt-chip-top">
+                  <span class="batt-chip-name">Battery 3</span>
+                  <div class="batt-icon"><div class="fill" style="width:29%; background:var(--orange);"></div></div>
+                </div>
+                <div class="batt-chip-val">29<span style="font-size:11px;color:var(--text-dim)">%</span></div>
+                <div class="batt-chip-sub">1.5 kW output</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Individual battery views: digital twin + stats -->
+          <div id="energyB1View" style="display:none;">
+            <div class="batt-detail">
+              <div class="batt-twin"><div class="fill" style="height:82%; background:var(--green);"></div></div>
+              <div class="batt-detail-stats">
+                <div class="batt-stat"><div class="l">Charge</div><div class="v">82%</div></div>
+                <div class="batt-stat"><div class="l">Output</div><div class="v">1.9 kW</div></div>
+                <div class="batt-stat"><div class="l">Voltage</div><div class="v">51.4 V</div></div>
+                <div class="batt-stat"><div class="l">Temp</div><div class="v">31°C</div></div>
+              </div>
+            </div>
+          </div>
+          <div id="energyB2View" style="display:none;">
+            <div class="batt-detail">
+              <div class="batt-twin"><div class="fill" style="height:54%; background:var(--blue);"></div></div>
+              <div class="batt-detail-stats">
+                <div class="batt-stat"><div class="l">Charge</div><div class="v">54%</div></div>
+                <div class="batt-stat"><div class="l">Output</div><div class="v">1.4 kW</div></div>
+                <div class="batt-stat"><div class="l">Voltage</div><div class="v">48.9 V</div></div>
+                <div class="batt-stat"><div class="l">Temp</div><div class="v">34°C</div></div>
+              </div>
+            </div>
+          </div>
+          <div id="energyB3View" style="display:none;">
+            <div class="batt-detail">
+              <div class="batt-twin"><div class="fill" style="height:29%; background:var(--orange);"></div></div>
+              <div class="batt-detail-stats">
+                <div class="batt-stat"><div class="l">Charge</div><div class="v">29%</div></div>
+                <div class="batt-stat"><div class="l">Output</div><div class="v">1.5 kW</div></div>
+                <div class="batt-stat"><div class="l">Voltage</div><div class="v">46.1 V</div></div>
+                <div class="batt-stat"><div class="l">Temp</div><div class="v">38°C</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="row-span2">
+
+        <!-- Highlights -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Today's Highlights</div>
+            <div class="card-sub mono">as of 14:02</div>
+          </div>
+          <div class="hl-grid">
+            <div class="hl featured">
+              <div>
+                <div class="hl-top"><span class="hl-label">Energy usage</span></div>
+                <div class="hl-val">450<span style="font-size:13px;color:var(--text-dim)">W</span></div>
+              </div>
+              <svg class="spark" width="100%" height="30" viewBox="0 0 200 30" preserveAspectRatio="none">
+                <polyline points="0,22 20,16 40,20 60,10 80,14 100,5 120,12 140,4 160,9 180,3 200,8" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="hl">
+              <div class="hl-top"><span class="hl-label">Compute</span></div>
+              <div class="gauge-wrap">
+                <svg class="gauge" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3.5"/>
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--purple)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="31" transform="rotate(-90 18 18)"/>
+                </svg>
+                <div class="hl-val">68<span style="font-size:12px;color:var(--text-dim)">%</span></div>
+              </div>
+            </div>
+            <div class="hl warn">
+              <div class="hl-top"><span class="hl-label">Alerts</span></div>
+              <div class="hl-val">3</div>
+              <div style="font-size:10.5px;color:var(--text-faint);margin-top:4px;">2 warning, 1 info</div>
+            </div>
+            <div class="hl">
+              <div class="hl-top"><span class="hl-label">Updates</span></div>
+              <div class="hl-val">5</div>
+              <div style="font-size:10.5px;color:var(--text-faint);margin-top:4px;">available now</div>
+            </div>
+            <div class="hl">
+              <div class="hl-top"><span class="hl-label">Notifications</span></div>
+              <div class="hl-val">7</div>
+              <div style="font-size:10.5px;color:var(--text-faint);margin-top:4px;">unread</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity -->
+        <div class="card" style="flex:1;">
+          <div class="card-head">
+            <div class="card-title">System Activity</div>
+            <div class="card-sub">Live feed</div>
+          </div>
+          <div class="feed">
+            <div class="feed-item blue">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Project updated</b> — Cellular Automata Visualizer</div>
+                  <div class="feed-time">2 min ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item purple">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Agent completed task</b> — data-sync-04</div>
+                  <div class="feed-time">14 min ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item green">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>File uploaded</b> — superformula_v2.json</div>
+                  <div class="feed-time">38 min ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item orange">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Simulation completed</b> — Chladni pattern batch</div>
+                  <div class="feed-time">1 hr ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item blue">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Backup completed</b> — full system snapshot</div>
+                  <div class="feed-time">3 hr ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Projects — full overview, click into individual project -->
+    <div class="card" style="margin-top:18px;">
+      <div class="card-head">
+        <div class="card-title">Projects</div>
+        <a class="view-all">View all
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="pgrid">
+        <div class="pcard">
+          <div class="pcard-badge">3</div>
+          <div class="pcard-top">
+            <div class="pcard-icon" style="background:var(--blue-dim); color:var(--blue);">◆</div>
+            <div>
+              <div class="pcard-name">Cellular Automata Visualizer</div>
+              <div class="pcard-sub">Updated 2 min ago</div>
+            </div>
+          </div>
+          <div class="pcard-status active">Active</div>
+          <div class="bar-outer"><div class="bar-inner" style="width:74%;"></div></div>
+          <div class="pcard-pct"><span>74%</span><span>4 agents</span></div>
+        </div>
+        <div class="pcard">
+          <div class="pcard-badge" style="background:var(--blue);">1</div>
+          <div class="pcard-top">
+            <div class="pcard-icon" style="background:var(--purple-dim); color:var(--purple);">▲</div>
+            <div>
+              <div class="pcard-name">Superformula Renderer</div>
+              <div class="pcard-sub">Updated 1 hr ago</div>
+            </div>
+          </div>
+          <div class="pcard-status progress">In progress</div>
+          <div class="bar-outer"><div class="bar-inner" style="width:45%; background:linear-gradient(90deg,var(--purple),var(--blue));"></div></div>
+          <div class="pcard-pct"><span>45%</span><span>2 agents</span></div>
+        </div>
+        <div class="pcard">
+          <div class="pcard-top">
+            <div class="pcard-icon" style="background:var(--green-dim); color:var(--green);">●</div>
+            <div>
+              <div class="pcard-name">Chladni Pattern Batch</div>
+              <div class="pcard-sub">Updated 3 hr ago</div>
+            </div>
+          </div>
+          <div class="pcard-status active">Active</div>
+          <div class="bar-outer"><div class="bar-inner" style="width:91%; background:linear-gradient(90deg,var(--green),var(--blue));"></div></div>
+          <div class="pcard-pct"><span>91%</span><span>1 agent</span></div>
+        </div>
+        <div class="pcard">
+          <div class="pcard-badge" style="background:var(--orange);">2</div>
+          <div class="pcard-top">
+            <div class="pcard-icon" style="background:rgba(217,154,91,0.12); color:var(--orange);">■</div>
+            <div>
+              <div class="pcard-name">Data Sync Pipeline</div>
+              <div class="pcard-sub">Updated yesterday</div>
+            </div>
+          </div>
+          <div class="pcard-status paused">Paused</div>
+          <div class="bar-outer"><div class="bar-inner" style="width:30%; background:linear-gradient(90deg,var(--orange),var(--red));"></div></div>
+          <div class="pcard-pct"><span>30%</span><span>0 agents</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects summary strip -->
+    <div class="card" style="margin-top:18px;">
+      <div class="card-head">
+        <div class="card-title">Projects Overview</div>
+        <a class="view-all">View All Projects
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:22px;">
+        <div>
+          <div class="hl-label">Total Projects</div>
+          <div class="hl-val" style="margin-top:6px;">12</div>
+        </div>
+        <div>
+          <div class="hl-label">Status Breakdown</div>
+          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--green)"></span>Active</span><span class="v">3</span></div>
+          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--blue)"></span>In Progress</span><span class="v">5</span></div>
+          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--orange)"></span>Paused</span><span class="v">2</span></div>
+        </div>
+        <div>
+          <div class="hl-label">Overall Progress</div>
+          <div class="hl-val" style="margin-top:6px;">67%</div>
+          <div class="bar-outer"><div class="bar-inner"></div></div>
+        </div>
+        <div>
+          <div class="hl-label">Overall Energy</div>
+          <div class="hl-val" style="margin-top:6px;">4.8 <span style="font-size:12px;color:var(--text-dim)">kW</span></div>
+        </div>
+        <div>
+          <div class="hl-label">Recent Activity</div>
+          <div class="hl-val" style="margin-top:6px;">18</div>
+          <div style="font-size:10.5px;color:var(--text-faint);margin-top:4px;">events today</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="note">Level 0 — Universal overview. Drill into a project for agents, data, and simulation detail.</footer>
+  </div>
+</div>
+
+<script>
+  // Hero view toggle — Numbers (default, compact) vs Chart (scrollable)
+  const heroSelect = document.getElementById('heroViewSelect');
+  const numbersView = document.getElementById('heroNumbersView');
+  const chartView = document.getElementById('heroChartView');
+  heroSelect.addEventListener('change', ()=>{
+    if(heroSelect.value === 'chart'){
+      numbersView.style.display = 'none';
+      chartView.style.display = 'block';
+    } else {
+      numbersView.style.display = 'grid';
+      chartView.style.display = 'none';
+    }
+  });
+
+  // Energy Sources — overall vs individual battery (digital twin)
+  const energySelect = document.getElementById('energyViewSelect');
+  const energyViews = {
+    overall: document.getElementById('energyOverallView'),
+    b1: document.getElementById('energyB1View'),
+    b2: document.getElementById('energyB2View'),
+    b3: document.getElementById('energyB3View'),
+  };
+  function showEnergyView(key){
+    Object.keys(energyViews).forEach(k=>{
+      energyViews[k].style.display = (k === key) ? 'block' : 'none';
+    });
+    energySelect.value = key;
+  }
+  energySelect.addEventListener('change', ()=> showEnergyView(energySelect.value));
+  document.querySelectorAll('.batt-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=> showEnergyView(chip.dataset.target));
+  });
+
+  // Tabs interactivity
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
