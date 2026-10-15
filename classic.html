@@ -573,6 +573,30 @@
   .pgrid::-webkit-scrollbar{ width:8px; }
   .pgrid::-webkit-scrollbar-thumb{ background:rgba(90,64,48,0.35); border-radius:99px; }
   .pgrid::-webkit-scrollbar-track{ background:transparent; }
+
+  /* ===== Round 3: hero metrics drill-down, nested energy, thumbnails, background changer ===== */
+  .hm-click{ font:inherit; color:inherit; cursor:pointer; text-align:center; }
+  .hm-click:hover{ background:rgba(255,255,255,0.7); }
+  .caret{ font-size:10px; opacity:0.7; margin-left:4px; display:inline-block; transition:transform .2s ease; }
+  .hm-click[aria-expanded="true"] .caret{ transform:rotate(180deg); }
+  .active-drill{ margin-top:12px; padding:14px; border-radius:var(--radius-md); background:rgba(255,255,255,0.35); border:1px solid rgba(90,64,48,0.12); display:grid; gap:12px; }
+  .active-drill[hidden]{ display:none; }
+  .drill-title{ display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; }
+  .drill-title i{ width:8px; height:8px; border-radius:50%; }
+  .drill-title em{ font-style:normal; font-weight:500; color:var(--text-dim); }
+  .drill-items{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .drill-items span{ font-size:11.5px; padding:4px 10px; border-radius:99px; background:rgba(255,255,255,0.6); border:1px solid rgba(90,64,48,0.12); }
+  .trend-full .card{ margin-top:16px; }
+  .pcard-icon{ width:52px; height:52px; border-radius:15px; overflow:hidden; cursor:pointer; font-size:18px; flex:none; }
+  .pcard-icon img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .wall-panel{ position:fixed; top:68px; right:22px; width:252px; z-index:70; padding:16px; border-radius:18px; background:rgba(255,255,255,0.82); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.95); box-shadow:0 18px 44px rgba(110,80,60,0.25); }
+  .wall-panel[hidden]{ display:none; }
+  .wall-title{ font-size:13px; font-weight:600; margin-bottom:12px; }
+  .wall-swatches{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+  .wall-swatches button{ width:100%; aspect-ratio:1; border-radius:50%; border:2px solid rgba(255,255,255,0.95); box-shadow:0 1px 4px rgba(110,80,60,0.3); cursor:pointer; }
+  .wall-row{ display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:12px; gap:8px; }
+  .wall-row input[type=file]{ font-size:11px; max-width:120px; }
+  body.has-wall::before{ display:none; }
 </style>
 </head>
 <body>
@@ -655,10 +679,15 @@
           </div>
 
           <div class="hero-metrics" id="heroNumbersView" style="margin-top:4px;">
-            <div class="hm blue"><div class="v">12</div><div class="l">Projects</div></div>
-            <div class="hm purple"><div class="v">4</div><div class="l">Active Agents</div></div>
-            <div class="hm ok"><div class="v">8</div><div class="l">Systems Online</div></div>
-            <div class="hm"><div class="v">99.8%</div><div class="l">Uptime</div></div>
+            <div class="hm blue"><div class="v">4</div><div class="l">Projects</div></div>
+            <button class="hm ok hm-click" id="activeMetric" aria-expanded="false"><div class="v">2</div><div class="l">Active <span class="caret">▾</span></div></button>
+            <div class="hm purple"><div class="v">3</div><div class="l">Energy sources</div></div>
+            <div class="hm"><div class="v">4.8 kW</div><div class="l">Total energy</div></div>
+          </div>
+          <div class="active-drill" id="activeDrill" hidden>
+            <div><div class="drill-title"><i style="background:var(--ok)"></i>Active <em>2</em></div><div class="drill-items"><span>Cellular Automata Visualizer</span><span>Chladni Pattern Batch</span></div></div>
+            <div><div class="drill-title"><i style="background:var(--blue)"></i>Autopilot <em>1</em></div><div class="drill-items"><span>Superformula Renderer</span></div></div>
+            <div><div class="drill-title"><i style="background:var(--orange)"></i>Non-active <em>1</em></div><div class="drill-items"><span>Data Sync Pipeline</span></div></div>
           </div>
 
           <div id="heroChartView" style="display:none;">
@@ -728,9 +757,6 @@
               <div><b>4.8 kW</b><span>Average</span></div>
               <div><b>3.9 kW</b><span>Low</span></div>
             </div>
-          </div>
-        </div>
-
         <!-- Energy Sources — digital twin -->
         <div class="card">
           <div class="card-head">
@@ -810,6 +836,8 @@
                 <div class="batt-stat"><div class="l">Temp</div><div class="v">38°C</div></div>
               </div>
             </div>
+          </div>
+        </div>
           </div>
         </div>
       </div>
@@ -965,7 +993,7 @@
               <div class="pcard-sub">Updated 1 hr ago</div>
             </div>
           </div>
-          <div class="pcard-status progress">In progress</div>
+          <div class="pcard-status progress">Autopilot</div>
           <div class="bar-outer"><div class="bar-inner" style="width:45%; background:linear-gradient(90deg,var(--purple),var(--blue));"></div></div>
           <div class="pcard-pct"><span>45%</span><span>2 agents</span></div>
         </div>
@@ -990,7 +1018,7 @@
               <div class="pcard-sub">Updated yesterday</div>
             </div>
           </div>
-          <div class="pcard-status paused">Paused</div>
+          <div class="pcard-status paused">Non-active</div>
           <div class="bar-outer"><div class="bar-inner" style="width:30%; background:linear-gradient(90deg,var(--orange),var(--red));"></div></div>
           <div class="pcard-pct"><span>30%</span><span>0 agents</span></div>
         </div>
@@ -1008,13 +1036,13 @@
       <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:22px;">
         <div>
           <div class="hl-label">Total Projects</div>
-          <div class="hl-val" style="margin-top:6px;">12</div>
+          <div class="hl-val" style="margin-top:6px;">4</div>
         </div>
         <div>
           <div class="hl-label">Status Breakdown</div>
-          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--ok)"></span>Active</span><span class="v">3</span></div>
-          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--blue)"></span>In Progress</span><span class="v">5</span></div>
-          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--orange)"></span>Paused</span><span class="v">2</span></div>
+          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--ok)"></span>Active</span><span class="v">2</span></div>
+          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--blue)"></span>Autopilot</span><span class="v">1</span></div>
+          <div class="proj-row"><span class="l"><span class="proj-dot" style="background:var(--orange)"></span>Non-active</span><span class="v">1</span></div>
         </div>
         <div>
           <div class="hl-label">Overall Progress</div>
@@ -1035,6 +1063,14 @@
 
     <footer class="note">Level 0 — Universal overview. Drill into a project for agents, data, and simulation detail.</footer>
   </div>
+</div>
+
+<div class="wall-panel" id="wallPanel" hidden>
+  <div class="wall-title">Background</div>
+  <div class="wall-swatches" id="wallSwatches"></div>
+  <label class="wall-row">Custom color <input type="color" id="wallColor" value="#d9c8b6"></label>
+  <label class="wall-row">Upload image <input type="file" id="wallFile" accept="image/*"></label>
+  <button class="export-btn" id="wallReset" style="margin-top:14px;">Reset</button>
 </div>
 
 <script>
@@ -1102,6 +1138,72 @@
   trendBtn.addEventListener('click', ()=>{
     trendFull.hidden = !trendFull.hidden;
     trendBtn.textContent = trendFull.hidden ? 'Expand' : 'Collapse';
+  });
+
+  // Hero "Active" drill-down: active, autopilot and non-active projects
+  const activeMetric = document.getElementById('activeMetric');
+  const activeDrill = document.getElementById('activeDrill');
+  activeMetric.addEventListener('click', ()=>{
+    activeDrill.hidden = !activeDrill.hidden;
+    activeMetric.setAttribute('aria-expanded', String(!activeDrill.hidden));
+  });
+
+  // Background changer (stored only in this browser)
+  const wallPanel = document.getElementById('wallPanel');
+  document.querySelector('.icon-btn[title="Settings"]').addEventListener('click', e=>{ e.stopPropagation(); wallPanel.hidden = !wallPanel.hidden; });
+  document.addEventListener('click', e=>{ if(!wallPanel.hidden && !wallPanel.contains(e.target)) wallPanel.hidden = true; });
+  function setWall(kind, val){
+    document.body.classList.toggle('has-wall', kind === 'image');
+    document.body.style.background = kind === 'image' ? 'url('+val+') center / cover fixed no-repeat' : val;
+    try{ localStorage.setItem('wall', JSON.stringify([kind, val])); }catch(err){}
+  }
+  ['#d9c8b6','#e8ddd0','#d3d4d8','#d4dde7','#e8d6d2','#f1eeea'].forEach(c=>{
+    const b = document.createElement('button');
+    b.style.background = c; b.title = c;
+    b.addEventListener('click', ()=> setWall('color', c));
+    document.getElementById('wallSwatches').appendChild(b);
+  });
+  document.getElementById('wallColor').addEventListener('input', e=> setWall('color', e.target.value));
+  document.getElementById('wallFile').addEventListener('change', e=>{
+    const f = e.target.files[0]; if(!f) return;
+    const img = new Image();
+    img.onload = ()=>{
+      const s = Math.min(1, 1600 / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = img.width*s; c.height = img.height*s;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      setWall('image', c.toDataURL('image/jpeg', 0.82));
+    };
+    img.src = URL.createObjectURL(f);
+  });
+  document.getElementById('wallReset').addEventListener('click', ()=>{
+    document.body.style.background = ''; document.body.classList.remove('has-wall');
+    try{ localStorage.removeItem('wall'); }catch(err){}
+  });
+  try{ const saved = JSON.parse(localStorage.getItem('wall') || 'null'); if(saved) setWall(saved[0], saved[1]); }catch(err){}
+
+  // Project app thumbnails: click the thumbnail to set an image (stored only in this browser)
+  const thumbInput = document.createElement('input'); thumbInput.type = 'file'; thumbInput.accept = 'image/*';
+  let thumbTarget = null;
+  document.querySelectorAll('.pcard').forEach(card=>{
+    const icon = card.querySelector('.pcard-icon');
+    const name = card.querySelector('.pcard-name').textContent;
+    icon.title = 'Click to set the app thumbnail';
+    try{ const s = localStorage.getItem('thumb:'+name); if(s) icon.innerHTML = '<img alt="" src="'+s+'">'; }catch(err){}
+    icon.addEventListener('click', e=>{ e.stopPropagation(); thumbTarget = {icon, name}; thumbInput.click(); });
+  });
+  thumbInput.addEventListener('change', ()=>{
+    const f = thumbInput.files[0]; if(!f || !thumbTarget) return;
+    const img = new Image();
+    img.onload = ()=>{
+      const c = document.createElement('canvas'); c.width = c.height = 96;
+      const s = Math.max(96/img.width, 96/img.height), w = img.width*s, h = img.height*s;
+      c.getContext('2d').drawImage(img, (96-w)/2, (96-h)/2, w, h);
+      const url = c.toDataURL('image/jpeg', 0.85);
+      thumbTarget.icon.innerHTML = '<img alt="" src="'+url+'">';
+      try{ localStorage.setItem('thumb:'+thumbTarget.name, url); }catch(err){}
+    };
+    img.src = URL.createObjectURL(f);
+    thumbInput.value = '';
   });
 </script>
 </body>
