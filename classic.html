@@ -597,6 +597,30 @@
   .wall-row{ display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:12px; gap:8px; }
   .wall-row input[type=file]{ font-size:11px; max-width:120px; }
   body.has-wall::before{ display:none; }
+
+  /* ===== Round 4: compact metrics box, projects are the main content ===== */
+  .main{ display:grid; grid-template-columns:minmax(300px,360px) minmax(0,1fr); grid-template-rows:auto auto 1fr auto auto; gap:16px; align-items:start; }
+  .main > .grid, .main > .grid > .row-span2{ display:contents; }
+  .hero{ grid-column:1; grid-row:1; padding:14px 16px; }
+  .highlights-card{ grid-column:1; grid-row:2; }
+  .projects-card{ grid-column:2; grid-row:1 / span 3; margin-top:0 !important; }
+  .activity-card{ grid-column:2; grid-row:4; }
+  .overview-card{ grid-column:1 / -1; grid-row:5; margin-top:0 !important; }
+  .main > footer{ grid-column:1 / -1; }
+  #heroViewSelect, .hero .icon-btn, .hero-foot{ display:none; }
+  .hero-top{ flex-wrap:wrap; gap:6px; }
+  .status-pill{ font-size:10.5px; padding:3px 9px; }
+  .hero-metrics{ grid-template-columns:1fr 1fr !important; gap:8px; }
+  .hm{ display:flex; flex-direction:row-reverse; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; text-align:left; }
+  .hm .v{ font-size:17px; }
+  .hm .l{ margin-top:0; font-size:11.5px; }
+  .hm-click{ width:100%; }
+  .pgrid{ grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); max-height:560px; }
+  @media (max-width:980px){
+    .main{ grid-template-columns:1fr; grid-template-rows:none; }
+    .hero,.highlights-card,.projects-card,.activity-card,.overview-card{ grid-column:1; grid-row:auto; }
+    .hero{ order:1; } .projects-card{ order:2; } .highlights-card{ order:3; } .activity-card{ order:4; } .overview-card{ order:5; }
+  }
 </style>
 </head>
 <body>
@@ -682,7 +706,7 @@
             <div class="hm blue"><div class="v">4</div><div class="l">Projects</div></div>
             <button class="hm ok hm-click" id="activeMetric" aria-expanded="false"><div class="v">2</div><div class="l">Active <span class="caret">▾</span></div></button>
             <div class="hm purple"><div class="v">3</div><div class="l">Energy sources</div></div>
-            <div class="hm"><div class="v">4.8 kW</div><div class="l">Total energy</div></div>
+            <button class="hm hm-click" id="energyMetric" aria-expanded="false"><div class="v">4.8 kW</div><div class="l">Total energy <span class="caret">▾</span></div></button>
           </div>
           <div class="active-drill" id="activeDrill" hidden>
             <div><div class="drill-title"><i style="background:var(--ok)"></i>Active <em>2</em></div><div class="drill-items"><span>Cellular Automata Visualizer</span><span>Chladni Pattern Batch</span></div></div>
@@ -715,30 +739,8 @@
             </div>
           </div>
 
-          <div class="hero-foot">
-            <span>Last checked 2 min ago</span>
-            <span class="mono">41d 06h uptime</span>
-          </div>
-        </div>
-
-        <!-- Trends -->
-        <div class="card">
-          <div class="card-head">
-            <div class="card-title">System Trends</div>
-            <div class="tabs">
-              <div class="tab active">Energy</div>
-              <div class="tab">Compute</div>
-              <div class="tab">Activity</div>
-              <div class="tab">Cost</div>
-            </div>
-          </div>
-          <div class="trend-value">
-            <div class="n">4.8 kW</div>
-            <div class="d">↓ 6.2% vs last week</div>
-            <svg class="trend-mini" viewBox="0 0 400 72" preserveAspectRatio="none"><polyline points="0,50 57,38 114,44 171,20 228,30 285,14 342,24 400,10" fill="none" stroke="#46c9ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>
-            <button class="expand-btn" id="trendExpand">Expand</button>
-          </div>
           <div class="trend-full" id="trendFull" hidden>
+            <div class="drill-title" style="margin-bottom:8px;">Energy trend <em>↓ 6.2% vs last week</em></div>
           <svg width="100%" height="72" viewBox="0 0 400 72" preserveAspectRatio="none">
             <defs>
               <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
@@ -756,6 +758,7 @@
               <div><b>5.6 kW</b><span>Peak</span></div>
               <div><b>4.8 kW</b><span>Average</span></div>
               <div><b>3.9 kW</b><span>Low</span></div>
+              <div><b>31°C</b><span>Avg temp</span></div>
             </div>
         <!-- Energy Sources — digital twin -->
         <div class="card">
@@ -839,6 +842,10 @@
           </div>
         </div>
           </div>
+          <div class="hero-foot">
+            <span>Last checked 2 min ago</span>
+            <span class="mono">41d 06h uptime</span>
+          </div>
         </div>
       </div>
 
@@ -846,7 +853,7 @@
       <div class="row-span2">
 
         <!-- Highlights -->
-        <div class="card">
+        <div class="card highlights-card">
           <div class="card-head">
             <div class="card-title">Today's Highlights</div>
             <div class="card-sub mono">as of 14:02</div>
@@ -890,7 +897,7 @@
         </div>
 
         <!-- Activity -->
-        <div class="card" style="flex:1;">
+        <div class="card activity-card" style="flex:1;">
           <div class="card-head">
             <div class="card-title">System Activity</div>
             <div class="card-sub">Live feed</div>
@@ -963,7 +970,7 @@
     </div>
 
     <!-- Projects — full overview, click into individual project -->
-    <div class="card" style="margin-top:18px;">
+    <div class="card projects-card">
       <div class="card-head">
         <div class="card-title">Projects</div>
         <a class="view-all">View all
@@ -1026,7 +1033,7 @@
     </div>
 
     <!-- Projects summary strip -->
-    <div class="card" style="margin-top:18px;">
+    <div class="card overview-card">
       <div class="card-head">
         <div class="card-title">Projects Overview</div>
         <a class="view-all">View All Projects
@@ -1132,12 +1139,12 @@
     });
   }
 
-  // Trends: condensed by default, expand for the full chart
-  const trendBtn = document.getElementById('trendExpand');
+  // Total energy: expand for the trend, stats and battery sources
+  const energyMetric = document.getElementById('energyMetric');
   const trendFull = document.getElementById('trendFull');
-  trendBtn.addEventListener('click', ()=>{
+  energyMetric.addEventListener('click', ()=>{
     trendFull.hidden = !trendFull.hidden;
-    trendBtn.textContent = trendFull.hidden ? 'Expand' : 'Collapse';
+    energyMetric.setAttribute('aria-expanded', String(!trendFull.hidden));
   });
 
   // Hero "Active" drill-down: active, autopilot and non-active projects
