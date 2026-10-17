@@ -621,6 +621,16 @@
     .hero,.highlights-card,.projects-card,.activity-card,.overview-card{ grid-column:1; grid-row:auto; }
     .hero{ order:1; } .projects-card{ order:2; } .highlights-card{ order:3; } .activity-card{ order:4; } .overview-card{ order:5; }
   }
+
+  /* ===== Round 5: minimal project box that grows naturally ===== */
+  .projects-card{ padding:14px 16px; }
+  .projects-card .card-head{ margin-bottom:10px; }
+  .pgrid{ max-height:none; overflow:visible; padding:0; background:none; border:0; box-shadow:none; gap:10px; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); }
+  .pcard{ padding:10px 12px; }
+  .pcard-top{ margin-bottom:8px; gap:10px; }
+  .pcard-icon{ width:40px; height:40px; border-radius:12px; font-size:15px; }
+  .pcard-sub{ display:none; }
+  .pcard-status{ margin-bottom:8px; }
 </style>
 </head>
 <body>
