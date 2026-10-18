@@ -702,6 +702,20 @@
     .main{ padding-bottom:96px; }
     .main[data-view="home"] .cols, .main[data-view="performance"] .cols, .main[data-view="activity"] .cols{ grid-template-columns:1fr; }
   }
+
+  /* ===== Round 9: keep numbers on one line, tidy the phone top bar ===== */
+  .hm .v{ white-space:nowrap; }
+  .hm .l{ min-width:0; }
+  @media (min-width:861px){
+    .main[data-view="home"] .cols{ grid-template-columns:minmax(300px,380px) minmax(0,1fr); }
+  }
+  @media (max-width:860px){
+    .brand small{ display:none; }
+    .searchbar{ flex:0 1 120px; min-width:0; overflow:hidden; white-space:nowrap; }
+    .searchbar kbd{ display:none; }
+    .navright .icon-btn[title="Groupthinkers"]{ display:none; }
+    .topnav{ gap:12px; padding:12px 14px; }
+  }
 </style>
 </head>
 <body>
@@ -1134,6 +1148,8 @@
 <div class="wall-panel" id="wallPanel" hidden>
   <div class="wall-title">Background</div>
   <div class="wall-swatches" id="wallSwatches"></div>
+  <div class="wall-title" style="margin:14px 0 8px; font-size:12px;">Gradients</div>
+  <div class="wall-swatches" id="wallGradients"></div>
   <label class="wall-row">Custom color <input type="color" id="wallColor" value="#d9c8b6"></label>
   <label class="wall-row">Upload image <input type="file" id="wallFile" accept="image/*"></label>
   <button class="export-btn" id="wallReset" style="margin-top:14px;">Reset</button>
@@ -1219,8 +1235,8 @@
   document.querySelector('.icon-btn[title="Settings"]').addEventListener('click', e=>{ e.stopPropagation(); wallPanel.hidden = !wallPanel.hidden; });
   document.addEventListener('click', e=>{ if(!wallPanel.hidden && !wallPanel.contains(e.target)) wallPanel.hidden = true; });
   function setWall(kind, val){
-    document.body.classList.toggle('has-wall', kind === 'image');
-    document.body.style.background = kind === 'image' ? 'url('+val+') center / cover fixed no-repeat' : val;
+    document.body.classList.toggle('has-wall', kind !== 'color');
+    document.body.style.background = kind === 'image' ? 'url('+val+') center / cover fixed no-repeat' : (kind === 'gradient' ? val+' center / cover fixed no-repeat' : val);
     try{ localStorage.setItem('wall', JSON.stringify([kind, val])); }catch(err){}
   }
   ['#d9c8b6','#e8ddd0','#d3d4d8','#d4dde7','#e8d6d2','#f1eeea'].forEach(c=>{
@@ -1228,6 +1244,19 @@
     b.style.background = c; b.title = c;
     b.addEventListener('click', ()=> setWall('color', c));
     document.getElementById('wallSwatches').appendChild(b);
+  });
+  [
+    'linear-gradient(135deg,#c9b6ff,#8fb4ff 55%,#e9d5ff)',
+    'linear-gradient(135deg,#ffc9a8,#f28ba8 55%,#b79af0)',
+    'linear-gradient(135deg,#bfe3ff,#7fb2ff 55%,#c6bcff)',
+    'linear-gradient(135deg,#ffe0d6,#f2b5c7 55%,#c9a0dc)',
+    'linear-gradient(135deg,#efe0d0,#c9b6a6 55%,#9fb0c8)',
+    'linear-gradient(135deg,#e6ebf2,#b9c4d6 55%,#8c9bb5)'
+  ].forEach(g=>{
+    const b = document.createElement('button');
+    b.style.background = g; b.title = 'Gradient';
+    b.addEventListener('click', ()=> setWall('gradient', g));
+    document.getElementById('wallGradients').appendChild(b);
   });
   document.getElementById('wallColor').addEventListener('input', e=> setWall('color', e.target.value));
   document.getElementById('wallFile').addEventListener('change', e=>{
