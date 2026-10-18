@@ -631,6 +631,77 @@
   .pcard-icon{ width:40px; height:40px; border-radius:12px; font-size:15px; }
   .pcard-sub{ display:none; }
   .pcard-status{ margin-bottom:8px; }
+
+  /* ===== Round 6: three packed columns so there are no empty gaps ===== */
+  .main{ display:block; }
+  .cols{ display:grid; grid-template-columns:minmax(300px,340px) minmax(0,1fr) minmax(280px,330px); gap:16px; align-items:start; }
+  .col{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+  .cols .card{ margin:0 !important; }
+  .col-a .card{ --ry:2.5deg; }
+  .col-c .card{ --ry:-2.5deg; }
+  @media (max-width:1180px){
+    .cols{ grid-template-columns:minmax(280px,340px) minmax(0,1fr); }
+    .col-c{ grid-column:1 / -1; }
+  }
+  @media (max-width:860px){
+    .cols{ grid-template-columns:1fr; }
+  }
+
+  /* ===== Round 7: small app boxes, like smart-device tiles ===== */
+  .pgrid{ grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:10px; }
+  .pcard{ display:flex; flex-direction:column; gap:8px; min-height:118px; padding:10px; }
+  .pcard-top{ flex-direction:column; align-items:flex-start; gap:8px; margin:0; }
+  .pcard-icon{ width:36px; height:36px; border-radius:11px; font-size:14px; }
+  .pcard-name{ font-size:12px; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .pcard-status{ margin:auto 0 0; align-self:flex-start; font-size:10px; padding:2px 7px; }
+  .pcard .bar-outer, .pcard .pcard-pct{ display:none; }
+  .pcard-badge{ top:8px; right:8px; min-width:18px; height:18px; font-size:10px; }
+
+  /* ===== Round 8: floating glass menu + Home shows only the main metrics ===== */
+  .shell{ grid-template-columns:auto minmax(0,1fr); }
+  .gnav{
+    position:sticky; top:76px; align-self:start; margin:14px 0 0 14px; width:66px; padding:10px 8px;
+    border-radius:26px; overflow:visible; z-index:30; transition:width .25s ease;
+    background:linear-gradient(160deg, rgba(255,255,255,0.62), rgba(255,255,255,0.24));
+    backdrop-filter:blur(26px) saturate(150%); -webkit-backdrop-filter:blur(26px) saturate(150%);
+    border:1px solid transparent; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 14px 36px rgba(110,80,60,0.18);
+  }
+  .gnav.open{ width:216px; }
+  .gnav::before{
+    content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none;
+    background:linear-gradient(160deg, rgba(255,255,255,1), rgba(160,130,108,0.45) 50%, rgba(255,255,255,0.9));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+  }
+  .sb-head{ display:flex; justify-content:flex-end; margin-bottom:6px; }
+  .sb-toggle{ width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,0.95); background:rgba(255,255,255,0.7); color:var(--text-dim); font-size:15px; line-height:1; cursor:pointer; transition:transform .25s ease; }
+  .gnav.open .sb-toggle{ transform:rotate(180deg); }
+  .sb-label{ display:none; font-size:10.5px; letter-spacing:1px; color:var(--text-faint); padding:4px 12px 8px; }
+  .gnav.open .sb-label{ display:block; }
+  .sb-item{ display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:15px; color:var(--text-dim); text-decoration:none; font-size:13px; white-space:nowrap; position:relative; transition:background .15s ease, color .15s ease; }
+  .sb-item svg{ flex:none; }
+  .sb-item span{ display:none; }
+  .gnav.open .sb-item span{ display:inline; }
+  .sb-item:hover{ color:var(--text); background:rgba(255,255,255,0.5); }
+  .sb-item.active{ color:var(--text); background:rgba(255,255,255,0.85); box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px rgba(110,80,60,0.14); }
+  .sb-badge{ font-style:normal; min-width:18px; height:18px; padding:0 5px; border-radius:99px; background:var(--red); color:#fff; font:600 10px 'JetBrains Mono',monospace; display:flex; align-items:center; justify-content:center; position:absolute; top:4px; left:26px; }
+  .gnav.open .sb-badge{ position:static; margin-left:auto; }
+  .sb-sep{ height:1px; background:rgba(90,64,48,0.14); margin:8px 6px; }
+  .main[data-view="home"] .highlights-card, .main[data-view="home"] .overview-card, .main[data-view="home"] .col-c{ display:none; }
+  .main[data-view="home"] .cols{ grid-template-columns:minmax(300px,340px) minmax(0,1fr); }
+  .main[data-view="performance"] .hero, .main[data-view="performance"] .projects-card, .main[data-view="performance"] .col-c{ display:none; }
+  .main[data-view="performance"] .cols{ grid-template-columns:minmax(300px,420px) minmax(0,1fr); }
+  .main[data-view="activity"] .col-a, .main[data-view="activity"] .col-b{ display:none; }
+  .main[data-view="activity"] .cols{ grid-template-columns:minmax(0,640px); }
+  @media (max-width:860px){
+    .shell{ display:block; }
+    .gnav, .gnav.open{ position:fixed; left:12px; right:12px; bottom:12px; top:auto; margin:0; width:auto; display:flex; justify-content:space-around; padding:6px; border-radius:24px; }
+    .sb-head, .sb-label, .sb-sep{ display:none !important; }
+    .gnav.open .sb-item span{ display:none; }
+    .gnav.open .sb-badge{ position:absolute; margin-left:0; }
+    .main{ padding-bottom:96px; }
+    .main[data-view="home"] .cols, .main[data-view="performance"] .cols, .main[data-view="activity"] .cols{ grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
@@ -663,39 +734,19 @@
 </div>
 
 <div class="shell">
-  <div class="sidebar">
-    <a class="active" href="#" data-label="Home">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-    </a>
-    <a href="#" data-label="Projects">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-    </a>
-    <a href="#" data-label="Agents">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
-    </a>
-    <a href="#" data-label="Data">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
-    </a>
-    <a href="#" data-label="Simulations">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
-    </a>
-    <a href="#" data-label="Files">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-    </a>
-    <div class="spacer"></div>
-    <a href="#" data-label="Notifications" style="position:relative;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-      <div class="dot" style="position:absolute; top:6px; right:8px;"></div>
-    </a>
-    <div class="sb-avatar">SH</div>
-  </div>
+  <aside class="gnav" id="gnav">
+    <div class="sb-head"><button class="sb-toggle" id="sbToggle" aria-label="Expand or collapse the menu">&rsaquo;</button></div>
+    <div class="sb-label">MENU</div>
+    <a class="sb-item active" data-view="home" href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a>
+    <a class="sb-item" data-view="performance" href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 1 8-8"/><path d="m12 12 4-4"/></svg><span>Performance</span></a>
+    <a class="sb-item" data-view="activity" href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span>Activity</span><em class="sb-badge">5</em></a>
+    <div class="sb-sep"></div>
+    <a class="sb-item" id="sbSettings" href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span>Settings</span></a>
+  </aside>
 
-  <div class="main">
-    <div class="grid">
-
-      <!-- LEFT COLUMN -->
-      <div class="row-span2">
-
+  <div class="main" data-view="home">
+    <div class="cols">
+      <div class="col col-a">
         <!-- Hero -->
         <div class="card hero">
           <div class="hero-top">
@@ -857,11 +908,6 @@
             <span class="mono">41d 06h uptime</span>
           </div>
         </div>
-      </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="row-span2">
-
         <!-- Highlights -->
         <div class="card highlights-card">
           <div class="card-head">
@@ -906,79 +952,8 @@
           </div>
         </div>
 
-        <!-- Activity -->
-        <div class="card activity-card" style="flex:1;">
-          <div class="card-head">
-            <div class="card-title">System Activity</div>
-            <div class="card-sub">Live feed</div>
-          </div>
-          <div class="feed">
-            <div class="feed-item blue">
-              <div class="feed-dot"></div>
-              <div class="feed-content">
-                <div>
-                  <div class="feed-text"><b>Project updated</b> — Cellular Automata Visualizer</div>
-                  <div class="feed-time">2 min ago</div>
-                </div>
-                <div class="feed-visual-placeholder" title="Visual to be added">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="feed-item purple">
-              <div class="feed-dot"></div>
-              <div class="feed-content">
-                <div>
-                  <div class="feed-text"><b>Agent completed task</b> — data-sync-04</div>
-                  <div class="feed-time">14 min ago</div>
-                </div>
-                <div class="feed-visual-placeholder" title="Visual to be added">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="feed-item ok">
-              <div class="feed-dot"></div>
-              <div class="feed-content">
-                <div>
-                  <div class="feed-text"><b>File uploaded</b> — superformula_v2.json</div>
-                  <div class="feed-time">38 min ago</div>
-                </div>
-                <div class="feed-visual-placeholder" title="Visual to be added">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="feed-item orange">
-              <div class="feed-dot"></div>
-              <div class="feed-content">
-                <div>
-                  <div class="feed-text"><b>Simulation completed</b> — Chladni pattern batch</div>
-                  <div class="feed-time">1 hr ago</div>
-                </div>
-                <div class="feed-visual-placeholder" title="Visual to be added">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="feed-item blue">
-              <div class="feed-dot"></div>
-              <div class="feed-content">
-                <div>
-                  <div class="feed-text"><b>Backup completed</b> — full system snapshot</div>
-                  <div class="feed-time">3 hr ago</div>
-                </div>
-                <div class="feed-visual-placeholder" title="Visual to be added">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-
-    </div>
-
+      <div class="col col-b">
     <!-- Projects — full overview, click into individual project -->
     <div class="card projects-card">
       <div class="card-head">
@@ -1074,6 +1049,80 @@
           <div class="hl-label">Recent Activity</div>
           <div class="hl-val" style="margin-top:6px;">18</div>
           <div style="font-size:10.5px;color:var(--text-faint);margin-top:4px;">events today</div>
+        </div>
+      </div>
+    </div>
+
+      </div>
+      <div class="col col-c">
+        <!-- Activity -->
+        <div class="card activity-card" style="flex:1;">
+          <div class="card-head">
+            <div class="card-title">System Activity</div>
+            <div class="card-sub">Live feed</div>
+          </div>
+          <div class="feed">
+            <div class="feed-item blue">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Project updated</b> — Cellular Automata Visualizer</div>
+                  <div class="feed-time">2 min ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item purple">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Agent completed task</b> — data-sync-04</div>
+                  <div class="feed-time">14 min ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item ok">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>File uploaded</b> — superformula_v2.json</div>
+                  <div class="feed-time">38 min ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item orange">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Simulation completed</b> — Chladni pattern batch</div>
+                  <div class="feed-time">1 hr ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="feed-item blue">
+              <div class="feed-dot"></div>
+              <div class="feed-content">
+                <div>
+                  <div class="feed-text"><b>Backup completed</b> — full system snapshot</div>
+                  <div class="feed-time">3 hr ago</div>
+                </div>
+                <div class="feed-visual-placeholder" title="Visual to be added">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1222,6 +1271,26 @@
     img.src = URL.createObjectURL(f);
     thumbInput.value = '';
   });
+
+  // Small project tiles: hovering shows the details that were removed from the tile
+  document.querySelectorAll('.pcard').forEach(card=>{
+    const spans = card.querySelectorAll('.pcard-pct span');
+    card.title = card.querySelector('.pcard-name').textContent + (spans.length > 1 ? ' \u00b7 ' + spans[0].textContent + ' \u00b7 ' + spans[1].textContent : '');
+  });
+
+  // Glass menu: expand/collapse, switch between Home, Performance and Activity
+  const gnav = document.getElementById('gnav');
+  const mainView = document.querySelector('.main');
+  document.getElementById('sbToggle').addEventListener('click', ()=> gnav.classList.toggle('open'));
+  gnav.querySelectorAll('[data-view]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      mainView.dataset.view = a.dataset.view;
+      gnav.querySelectorAll('.sb-item').forEach(x=> x.classList.toggle('active', x === a));
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+  document.getElementById('sbSettings').addEventListener('click', e=>{ e.preventDefault(); e.stopPropagation(); wallPanel.hidden = !wallPanel.hidden; });
 </script>
 </body>
 </html>
