@@ -881,6 +881,297 @@
   .hero .drill-items span{ color:#f6f8ee; }
   @media(min-width:861px) and (max-width:1200px){ .main[data-view="home"] .hero{ grid-column:1 / 6; } .digital-scene{ grid-column:6 / -1; } .hero-top{ flex-direction:column; } }
   @media(max-width:860px){ .topnav{ margin:10px 12px 0; border-radius:18px; } .main[data-view="home"] .hero{ grid-column:1; grid-row:auto; min-height:0; } .digital-scene{ grid-column:1; grid-row:auto; order:1; min-height:290px; } .projects-card{ grid-row:auto; order:2; padding:16px; } .main{ padding-top:24px; } .gnav,.gnav.open{ background:#65685ce0; } }
+
+  /* Client refinement: forest gradient, quiet glass and line-only metrics. */
+  :root{
+    --bg:#0a0e06; --bg-elev:#142218; --text:#ffffff; --text-dim:#dce8de;
+    --text-faint:#9eb1a2; --ok:#20be35; --blue:#b5fdce; --purple:#b5fdce;
+    --orange:#ffce06; --border:rgba(181,253,206,.20); --border-soft:rgba(181,253,206,.10);
+  }
+  body{
+    background:
+      radial-gradient(circle at 88% 8%,rgba(32,190,53,.48) 0,rgba(32,190,53,.12) 24%,transparent 47%),
+      radial-gradient(circle at 7% 92%,rgba(255,206,6,.22) 0,transparent 34%),
+      linear-gradient(135deg,#071008 0%,#0a0e06 38%,#102d18 72%,#20be35 145%);
+    background-attachment:fixed;
+  }
+  body::before{
+    background:linear-gradient(120deg,rgba(181,253,206,.025),transparent 35%,rgba(255,255,255,.018));
+  }
+  .topnav,
+  .gnav,.gnav.open{
+    background:rgba(10,18,10,.54);
+    border-color:rgba(181,253,206,.17);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 18px 45px rgba(0,0,0,.16);
+    backdrop-filter:blur(24px) saturate(112%);
+    -webkit-backdrop-filter:blur(24px) saturate(112%);
+  }
+  .brand .mark{ background:#20be35; box-shadow:0 0 20px rgba(32,190,53,.25); }
+  .brand .mark::after{ background:#b5fdce; }
+  .searchbar,.icon-btn,.view-select,.expand-btn{
+    background:rgba(181,253,206,.045); border-color:rgba(181,253,206,.14); color:#fff;
+  }
+  .view-select option{ background:#0a0e06; color:#fff; }
+  .workspace-tag{ border-color:rgba(181,253,206,.24); background:rgba(181,253,206,.04); }
+  .sb-item.active{ background:#b5fdce; color:#0a0e06; box-shadow:0 5px 20px rgba(32,190,53,.16); }
+  .card,.card:hover{
+    background:linear-gradient(135deg,rgba(24,42,28,.67),rgba(10,14,6,.43));
+    border-color:rgba(181,253,206,.15);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 18px 50px rgba(0,0,0,.14);
+  }
+  .main[data-view="home"] .hero{
+    background:linear-gradient(145deg,rgba(3,6,3,.97),rgba(10,14,6,.94));
+    border-color:rgba(181,253,206,.16);
+  }
+  .hm,.hl,.batt-chip,.batt-stat{
+    background:rgba(181,253,206,.035); border-color:rgba(181,253,206,.105); box-shadow:none;
+  }
+  .hm .v,.hl-val,.trend-stats b{ font-weight:400; letter-spacing:-.45px; }
+  .hm .l,.hl-label,.pcard-sub,.card-sub,.hero-foot,.trend-stats span{ color:#a9b8ab; font-weight:400; }
+  .status-pill,.pcard-status.active{ background:rgba(32,190,53,.10); color:#b5fdce; border-color:rgba(32,190,53,.28); }
+  .status-pill .pulse{ background:#20be35; box-shadow:0 0 10px rgba(32,190,53,.45); }
+  .digital-scene{
+    background:radial-gradient(circle at 74% 42%,rgba(32,190,53,.28),transparent 39%),linear-gradient(135deg,rgba(181,253,206,.10),rgba(7,15,8,.62));
+    border-color:rgba(181,253,206,.17);
+  }
+  .scene-pill{ background:rgba(7,15,8,.50); border-color:rgba(181,253,206,.30); }
+  .projects-card{
+    background:linear-gradient(130deg,rgba(18,43,25,.76),rgba(7,14,8,.67)) !important;
+    border-color:rgba(181,253,206,.15) !important;
+  }
+  .pcard,.pcard:hover{
+    background:linear-gradient(145deg,rgba(181,253,206,.075),rgba(255,255,255,.018));
+    border-color:rgba(181,253,206,.13);
+  }
+  .pcard:hover{ border-color:rgba(181,253,206,.34); background:linear-gradient(145deg,rgba(181,253,206,.11),rgba(255,255,255,.025)); }
+  .pcard .pcard-icon,
+  .pcard:nth-child(2) .pcard-icon,
+  .pcard:nth-child(3) .pcard-icon,
+  .pcard:nth-child(4) .pcard-icon{
+    background:radial-gradient(circle at 70% 38%,rgba(32,190,53,.20),transparent 46%),linear-gradient(145deg,rgba(181,253,206,.045),rgba(0,0,0,.16)) !important;
+    color:#b5fdce !important;
+  }
+  .pcard-icon::after{ background:rgba(3,8,4,.52); border-color:rgba(181,253,206,.19); }
+  .pcard-badge{ background:#20be35; color:#071008; }
+  .pcard-status.progress{ background:rgba(181,253,206,.07); color:#b5fdce; border-color:rgba(181,253,206,.17); }
+  .pcard-status.paused{ background:rgba(255,206,6,.08); color:#ffdd58; border-color:rgba(255,206,6,.20); }
+  .active-drill,.drill-items span{ background:rgba(181,253,206,.025); border-color:rgba(181,253,206,.10); }
+  .wall-panel{ background:rgba(7,15,8,.94); border-color:rgba(181,253,206,.20); }
+
+  /* Thin, unfilled graphs and lightweight time stamps. */
+  .energy-spark svg path:first-child,
+  .load-chart-wrap polyline,
+  .trend-full > svg polyline,
+  .spark polyline{
+    stroke:#b5fdce !important; stroke-width:1.25 !important; stroke-dasharray:none !important;
+    stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke;
+  }
+  .energy-spark svg path:nth-child(2),
+  .load-chart-wrap polygon,
+  .trend-full > svg polygon{ display:none; }
+  .load-chart-wrap g{ opacity:.45; }
+  .load-chart-wrap g line{ stroke:rgba(181,253,206,.08) !important; stroke-width:.75; }
+  .energy-spark p,.load-chart-labels,.trend-days{
+    color:#8fa193; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:400; letter-spacing:.02em;
+  }
+  .energy-spark{ border-top:1px solid rgba(181,253,206,.075); padding-top:15px; }
+  .trend-stats{ border-top:1px solid rgba(181,253,206,.08); padding-top:14px; }
+  .gauge circle{ stroke-width:1.6 !important; }
+  .bar-outer{ height:2px; background:rgba(181,253,206,.10); }
+  .bar-inner{ background:#20be35; }
+  :focus-visible{ outline-color:#b5fdce; }
+  @media(max-width:860px){ .gnav,.gnav.open{ background:rgba(7,15,8,.90); } }
+
+  /* Client correction: neutral glass surfaces; color is reserved for data states. */
+  :root{
+    --bg:#0c0d0f; --bg-elev:#191b1e; --text:#ffffff; --text-dim:#d7d9dc;
+    --text-faint:#94989e; --border:rgba(255,255,255,.18); --border-soft:rgba(255,255,255,.09);
+    --ok:#35c66b; --blue:#65a9ff; --purple:#9e8cff; --orange:#f1b84b; --red:#ec6b6b;
+  }
+  body{
+    background:
+      radial-gradient(circle at 84% 12%,rgba(255,255,255,.10),transparent 31%),
+      radial-gradient(circle at 12% 88%,rgba(255,255,255,.055),transparent 28%),
+      linear-gradient(135deg,#08090a 0%,#141619 48%,#25282c 100%);
+    background-attachment:fixed;
+  }
+  body::before{
+    background:linear-gradient(115deg,rgba(255,255,255,.025),transparent 38%,rgba(255,255,255,.012));
+  }
+  .topnav,.gnav,.gnav.open{
+    background:rgba(255,255,255,.055);
+    border-color:rgba(255,255,255,.16);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 20px 50px rgba(0,0,0,.20);
+    backdrop-filter:blur(28px) saturate(105%);
+    -webkit-backdrop-filter:blur(28px) saturate(105%);
+  }
+  .brand .mark{ background:#fff; box-shadow:none; }
+  .brand .mark::after{ background:#0a0b0c; }
+  .searchbar,.icon-btn,.view-select,.expand-btn,.workspace-tag{
+    background:rgba(255,255,255,.045); border-color:rgba(255,255,255,.14); color:#fff;
+  }
+  .view-select option{ background:#111315; color:#fff; }
+  .sb-item.active{ background:#fff; color:#090a0b; border-color:#fff; box-shadow:0 6px 22px rgba(0,0,0,.18); }
+  .card,.card:hover,
+  .main[data-view="home"] .hero,
+  .projects-card{
+    background:linear-gradient(135deg,rgba(255,255,255,.085),rgba(255,255,255,.025)) !important;
+    border-color:rgba(255,255,255,.16) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 18px 48px rgba(0,0,0,.16);
+    backdrop-filter:blur(30px) saturate(105%);
+    -webkit-backdrop-filter:blur(30px) saturate(105%);
+  }
+  .hm,.hl,.batt-chip,.batt-stat,.active-drill,.drill-items span{
+    background:rgba(255,255,255,.035); border-color:rgba(255,255,255,.10); color:#fff; box-shadow:none;
+  }
+  .hm-click:hover{ background:rgba(255,255,255,.075); }
+  .digital-scene{
+    background:radial-gradient(circle at 72% 40%,rgba(255,255,255,.13),transparent 44%),linear-gradient(135deg,rgba(255,255,255,.075),rgba(0,0,0,.16));
+    border-color:rgba(255,255,255,.16);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+  }
+  .digital-scene > svg{ filter:grayscale(1) brightness(1.08); opacity:.86; }
+  .scene-pill{ background:rgba(0,0,0,.27); border-color:rgba(255,255,255,.20); color:#fff; }
+  .pcard,.pcard:hover{
+    background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018));
+    border-color:rgba(255,255,255,.12);
+  }
+  .pcard:hover{ background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.026)); border-color:rgba(255,255,255,.27); }
+  .pcard .pcard-icon,
+  .pcard:nth-child(2) .pcard-icon,
+  .pcard:nth-child(3) .pcard-icon,
+  .pcard:nth-child(4) .pcard-icon{
+    background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(0,0,0,.14)) !important;
+    color:#fff !important; border-bottom-color:rgba(255,255,255,.08);
+  }
+  .pcard-icon::after{ background:rgba(255,255,255,.90); border-color:#fff; color:#0a0b0c; }
+  .pcard-badge{ background:#fff !important; color:#0a0b0c; }
+  .wall-panel{ background:rgba(17,19,21,.94); border-color:rgba(255,255,255,.17); }
+
+  /* Semantic color system: status colors only. */
+  .status-pill,.pcard-status.active{
+    background:rgba(53,198,107,.10); color:#8cedae; border-color:rgba(53,198,107,.28);
+  }
+  .status-pill .pulse,.proj-dot[style*="var(--ok)"]{ background:#35c66b !important; }
+  .pcard-status.progress{ background:rgba(101,169,255,.10); color:#9ec9ff; border-color:rgba(101,169,255,.28); }
+  .pcard-status.paused{ background:rgba(241,184,75,.10); color:#ffd783; border-color:rgba(241,184,75,.28); }
+  .hl.warn{ border-color:rgba(241,184,75,.20); }
+  .bar-inner{ background:#35c66b; }
+  .energy-spark svg path:first-child,.load-chart-wrap polyline,.trend-full > svg polyline,.spark polyline{ stroke:#ffffff !important; }
+  .load-chart-wrap g line{ stroke:rgba(255,255,255,.075) !important; }
+  .energy-spark{ border-top-color:rgba(255,255,255,.075); }
+  .energy-spark p,.load-chart-labels,.trend-days{ color:#8f949a; }
+  .trend-stats{ border-top-color:rgba(255,255,255,.08); }
+  :focus-visible{ outline-color:#fff; }
+  @media(max-width:860px){ .gnav,.gnav.open{ background:rgba(18,20,22,.90); } }
+
+  /* Multi-metric line graph requested by the client. */
+  .energy-spark{ padding-top:14px; }
+  .energy-spark-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+  .energy-spark-title{ color:#dfe1e4; font-size:10px; letter-spacing:.02em; }
+  .energy-legend{ display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+  .energy-legend span{ display:inline-flex; align-items:center; gap:5px; color:#9ca1a7; font-size:8px; white-space:nowrap; }
+  .energy-legend i{ width:13px; height:1px; display:block; background:currentColor; }
+  .energy-legend .battery-one{ color:#ffffff; }
+  .energy-legend .battery-two{ color:#65a9ff; }
+  .energy-legend .battery-three{ color:#f1b84b; }
+  .energy-spark svg{ width:100%; height:88px; overflow:visible; }
+  .energy-spark .chart-grid line{ stroke:rgba(255,255,255,.075); stroke-width:.7; stroke-dasharray:3 5; vector-effect:non-scaling-stroke; }
+  .energy-spark .series{ display:block !important; fill:none; stroke-width:1.2 !important; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+  .energy-spark .series-one{ stroke:#ffffff !important; }
+  .energy-spark .series-two{ stroke:#65a9ff !important; }
+  .energy-spark .series-three{ stroke:#f1b84b !important; }
+  .energy-spark .focus-line{ stroke:rgba(255,255,255,.28); stroke-width:.75; stroke-dasharray:3 4; vector-effect:non-scaling-stroke; }
+  .energy-spark .marker-ring{ fill:#151719; stroke:rgba(255,255,255,.18); stroke-width:5; }
+  .energy-spark .marker-one{ fill:#ffffff; }
+  .energy-spark .marker-two{ fill:#65a9ff; }
+  .energy-spark .marker-three{ fill:#f1b84b; }
+  .energy-spark .time-axis{ margin-top:4px; }
+  .energy-spark .time-axis span{ color:#858a90; font-size:8px; }
+  @media(max-width:480px){ .energy-spark-head{ align-items:flex-start; flex-direction:column; } .energy-legend{ justify-content:flex-start; } }
+
+  /* Compact home: standalone metric cards, small projects, details in modals. */
+  .main[data-view="home"] .cols{ display:grid; grid-template-columns:1fr; gap:24px; }
+  .main[data-view="home"] .digital-scene,
+  .main[data-view="home"] .highlights-card,
+  .main[data-view="home"] .overview-card,
+  .main[data-view="home"] .col-c{ display:none; }
+  .main[data-view="home"] .hero{
+    grid-column:1; grid-row:auto; min-height:0; padding:0; background:transparent !important;
+    border:0 !important; border-radius:0; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+  .main[data-view="home"] .hero-top{ margin-bottom:13px; }
+  .main[data-view="home"] .hero-title{ font-size:14px; }
+  .main[data-view="home"] .hero-metrics{
+    display:grid !important; grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+    gap:11px; margin-top:0 !important;
+  }
+  .main[data-view="home"] .hm{
+    min-height:86px; padding:13px 14px; border-radius:16px; cursor:pointer; text-align:left;
+    appearance:none; font:inherit; transition:background .18s ease,border-color .18s ease,transform .18s ease;
+  }
+  .main[data-view="home"] .hm:hover{ background:rgba(255,255,255,.075); border-color:rgba(255,255,255,.22); transform:translateY(-1px) !important; }
+  .main[data-view="home"] .hm .v{ font-size:23px; }
+  .main[data-view="home"] .hm .l{ font-size:10px; }
+  .main[data-view="home"] .energy-spark,
+  .main[data-view="home"] .active-drill,
+  .main[data-view="home"] #heroChartView,
+  .main[data-view="home"] .trend-full,
+  .main[data-view="home"] .hero-foot{ display:none !important; }
+  .metric-add{ align-items:center !important; justify-content:center !important; text-align:center !important; border-style:dashed !important; }
+  .metric-add .plus{ display:grid; place-items:center; width:28px; height:28px; border:1px solid rgba(255,255,255,.22); border-radius:50%; font-size:20px; font-weight:300; line-height:1; color:#fff; }
+  .metric-add .l{ margin-top:1px; }
+  .main[data-view="home"] .projects-card{
+    grid-column:1; grid-row:auto; padding:0; background:transparent !important; border:0 !important;
+    border-radius:0; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+  .main[data-view="home"] .projects-card .card-head{ margin:0 0 12px; }
+  .main[data-view="home"] .projects-card .card-title{ font-size:14px; }
+  .main[data-view="home"] .pgrid{ gap:11px; }
+  .main[data-view="home"] .pcard{ min-height:0; border-radius:16px; cursor:pointer; }
+  .main[data-view="home"] .pcard-icon{ min-height:0; aspect-ratio:16 / 7; font-size:29px; }
+  .main[data-view="home"] .pcard-icon::after{ bottom:8px; right:8px; font-size:8px; padding:4px 6px; }
+  .main[data-view="home"] .pcard-top > div:last-child:not(.pcard-icon){ padding:11px 12px 6px; }
+  .main[data-view="home"] .pcard-name{ font-size:11px; line-height:1.35; }
+  .main[data-view="home"] .pcard-sub{ font-size:8px; margin-top:4px; }
+  .main[data-view="home"] .pcard-status{ margin:3px 12px 11px; padding:3px 7px; font-size:8px; }
+  .main[data-view="home"] .pcard-badge{ top:8px; right:8px; font-size:8px; min-width:19px; height:19px; }
+  .main[data-view="home"] footer.note{ margin-top:4px; padding-top:12px; }
+
+  .detail-modal{ position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:24px; }
+  .detail-modal[hidden]{ display:none; }
+  .detail-modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.66); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+  .detail-dialog{
+    position:relative; width:min(720px,100%); max-height:min(760px,calc(100vh - 48px)); overflow:auto;
+    padding:26px; border:1px solid rgba(255,255,255,.18); border-radius:24px;
+    background:linear-gradient(145deg,rgba(39,42,46,.94),rgba(13,15,17,.94));
+    box-shadow:0 30px 100px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  .detail-close{ position:absolute; top:17px; right:17px; width:34px; height:34px; border:1px solid rgba(255,255,255,.15); border-radius:50%; background:rgba(255,255,255,.055); color:#fff; font-size:20px; cursor:pointer; }
+  .detail-kicker{ color:#92979e; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; }
+  .detail-title{ margin-top:7px; padding-right:46px; font-size:25px; font-weight:400; letter-spacing:-.7px; }
+  .detail-body{ margin-top:22px; }
+  .modal-stat-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:18px; }
+  .modal-stat{ padding:14px; border:1px solid rgba(255,255,255,.10); border-radius:14px; background:rgba(255,255,255,.035); }
+  .modal-stat b{ display:block; color:#fff; font-size:20px; font-weight:400; }
+  .modal-stat span{ display:block; color:#9499a0; font-size:9px; margin-top:6px; }
+  .modal-list{ display:grid; gap:8px; }
+  .modal-list-row{ display:flex; justify-content:space-between; align-items:center; gap:14px; padding:12px 14px; border:1px solid rgba(255,255,255,.09); border-radius:12px; background:rgba(255,255,255,.025); font-size:11px; }
+  .modal-status{ display:inline-flex; align-items:center; gap:6px; color:#a5abb2; font-size:9px; }
+  .modal-status i{ width:6px; height:6px; border-radius:50%; background:var(--ok); }
+  .detail-body .energy-spark{ display:block !important; margin-top:4px; padding:18px; border:1px solid rgba(255,255,255,.10); border-radius:16px; background:rgba(255,255,255,.025); }
+  .detail-body .energy-spark svg{ height:170px; }
+  .metric-picker{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .metric-choice{ padding:18px 12px; border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.035); color:#fff; text-align:left; cursor:pointer; }
+  .metric-choice:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.24); }
+  .metric-choice b{ display:block; font-size:13px; font-weight:500; }
+  .metric-choice span{ display:block; margin-top:5px; color:#92979e; font-size:9px; }
+  body.modal-open{ overflow:hidden; }
+  @media(max-width:1000px){ .main[data-view="home"] .hero-metrics{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; } }
+  @media(max-width:700px){ .main[data-view="home"] .hero-metrics{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; } .modal-stat-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media(max-width:480px){ .detail-modal{ padding:12px; } .detail-dialog{ padding:21px 16px; border-radius:19px; } .metric-picker{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -932,17 +1223,17 @@
       <section class="digital-scene" aria-label="Illustration of connected project modules">
         <div class="scene-label">Connected workspace</div>
         <svg viewBox="0 0 800 370" fill="none" aria-hidden="true">
-          <defs><linearGradient id="moduleTop" x1="330" y1="60" x2="620" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#f1f0e5"/><stop offset="1" stop-color="#89917e"/></linearGradient><linearGradient id="moduleSide" x1="440" y1="150" x2="590" y2="320" gradientUnits="userSpaceOnUse"><stop stop-color="#646d5d"/><stop offset="1" stop-color="#30392b"/></linearGradient><filter id="nodeGlow"><feGaussianBlur stdDeviation="10"/></filter></defs>
+          <defs><linearGradient id="moduleTop" x1="330" y1="60" x2="620" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#b5fdce"/><stop offset="1" stop-color="#388f49"/></linearGradient><linearGradient id="moduleSide" x1="440" y1="150" x2="590" y2="320" gradientUnits="userSpaceOnUse"><stop stop-color="#1a5d27"/><stop offset="1" stop-color="#071008"/></linearGradient><filter id="nodeGlow"><feGaussianBlur stdDeviation="10"/></filter></defs>
           <ellipse cx="525" cy="298" rx="210" ry="33" fill="#263020" opacity=".13"/>
-          <path d="M345 222 526 132 721 221 533 320Z" fill="#e3e3d1" opacity=".36"/>
+          <path d="M345 222 526 132 721 221 533 320Z" fill="#20be35" opacity=".12"/>
           <path d="M370 166 530 90 693 167 533 246Z" fill="url(#moduleTop)"/>
-          <path d="M370 166 533 246 533 281 370 201Z" fill="#bfc3b2"/>
+          <path d="M370 166 533 246 533 281 370 201Z" fill="#5a9c69"/>
           <path d="M533 246 693 167 693 202 533 281Z" fill="url(#moduleSide)"/>
-          <path d="M396 165 530 102 665 166 533 230Z" fill="#424e3b" stroke="#d2e8b3" stroke-opacity=".65"/>
+          <path d="M396 165 530 102 665 166 533 230Z" fill="#0a0e06" stroke="#b5fdce" stroke-opacity=".65"/>
           <g stroke="#c6dfa8" stroke-opacity=".32"><path d="m420 153 136 66M447 140l136 66M474 128l136 65M502 115l136 65M424 179l132-64M452 193l132-64M480 207l132-64M507 219l132-64"/></g>
           <path d="m397 165 133-63 135 64-132 64Z" stroke="#d6f1b4" stroke-width="8" opacity=".30" filter="url(#nodeGlow)"/>
           <path d="m397 165 133-63 135 64-132 64Z" stroke="#d6efb7" stroke-width="1.7"/>
-          <path d="M467 115V70l64-30 64 30v45l-64 30Z" fill="#dbe0cf" fill-opacity=".25" stroke="#f1f5e6" stroke-opacity=".4"/>
+          <path d="M467 115V70l64-30 64 30v45l-64 30Z" fill="#20be35" fill-opacity=".15" stroke="#b5fdce" stroke-opacity=".4"/>
           <path d="m467 70 64 30 64-30M531 100v45" stroke="#edf6db" stroke-opacity=".55"/>
           <path d="M388 205v50l-65 30M675 211v41l58 29" stroke="#ecf6da" stroke-opacity=".6" stroke-dasharray="4 6"/>
           <circle cx="323" cy="285" r="5" fill="#d3edb2"/><circle cx="733" cy="281" r="5" fill="#d3edb2"/>
@@ -969,12 +1260,38 @@
           </div>
 
           <div class="hero-metrics" id="heroNumbersView" style="margin-top:4px;">
-            <div class="hm blue"><div class="v">4</div><div class="l">Projects</div></div>
-            <button class="hm ok hm-click" id="activeMetric" aria-expanded="false"><div class="v">2</div><div class="l">Active <span class="caret">▾</span></div></button>
-            <div class="hm purple"><div class="v">3</div><div class="l">Energy sources</div></div>
-            <button class="hm hm-click" id="energyMetric" aria-expanded="false"><div class="v">4.8 kW</div><div class="l">Total energy <span class="caret">▾</span></div></button>
+            <button class="hm blue" type="button" data-metric="projects"><div class="v">4</div><div class="l">Projects</div></button>
+            <button class="hm ok hm-click" type="button" id="activeMetric" data-metric="active" aria-expanded="false"><div class="v">2</div><div class="l">Active</div></button>
+            <button class="hm purple" type="button" data-metric="sources"><div class="v">3</div><div class="l">Energy sources</div></button>
+            <button class="hm hm-click" type="button" id="energyMetric" data-metric="energy" aria-expanded="false"><div class="v">4.8 kW</div><div class="l">Total energy</div></button>
+            <button class="hm metric-add" type="button" id="addMetric" aria-label="Add a metric"><span class="plus">+</span><span class="l">Add metric</span></button>
           </div>
-          <div class="energy-spark" aria-hidden="true"><svg viewBox="0 0 310 53" preserveAspectRatio="none"><path d="M0 42H35V31H70V44H105V12H140V33H175V39H210V14H245V30H280V42H310" stroke="#dfe6d8" stroke-width="1.5" stroke-dasharray="3 4"/><path d="M105 52V12H140V52M210 52V14H245V52" fill="#c4dda421" stroke="#c4dda4" stroke-opacity=".4"/></svg><p><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></p></div>
+          <div class="energy-spark" role="img" aria-label="Battery output over 24 hours. Battery 1, Battery 2, and Battery 3 are shown as separate lines.">
+            <div class="energy-spark-head">
+              <span class="energy-spark-title">Battery output · kW</span>
+              <div class="energy-legend" aria-hidden="true">
+                <span class="battery-one"><i></i>Battery 1</span>
+                <span class="battery-two"><i></i>Battery 2</span>
+                <span class="battery-three"><i></i>Battery 3</span>
+              </div>
+            </div>
+            <svg viewBox="0 0 310 88" preserveAspectRatio="none" aria-hidden="true">
+              <g class="chart-grid">
+                <line x1="0" y1="14" x2="310" y2="14"/>
+                <line x1="0" y1="42" x2="310" y2="42"/>
+                <line x1="0" y1="70" x2="310" y2="70"/>
+              </g>
+              <path class="series series-one" d="M0 59 C20 58 31 25 53 25 S85 65 106 61 S136 20 159 22 S190 64 212 59 S244 31 265 34 S291 54 310 48"/>
+              <path class="series series-two" d="M0 28 C20 29 31 63 53 62 S84 28 106 30 S137 60 159 59 S190 25 212 28 S243 61 265 58 S292 32 310 36"/>
+              <path class="series series-three" d="M0 44 C22 41 34 52 53 50 S86 35 106 39 S137 51 159 48 S191 33 212 37 S243 52 265 48 S292 38 310 41"/>
+              <line class="focus-line" x1="233" y1="12" x2="233" y2="78"/>
+              <circle class="marker-ring" cx="233" cy="51" r="7"/>
+              <circle class="marker-one" cx="233" cy="51" r="2.5"/>
+              <circle class="marker-two" cx="233" cy="41" r="2.5"/>
+              <circle class="marker-three" cx="233" cy="44" r="2.5"/>
+            </svg>
+            <p class="time-axis" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></p>
+          </div>
           <div class="active-drill" id="activeDrill" hidden>
             <div><div class="drill-title"><i style="background:var(--ok)"></i>Active <em>2</em></div><div class="drill-items"><span>Cellular Automata Visualizer</span><span>Chladni Pattern Batch</span></div></div>
             <div><div class="drill-title"><i style="background:var(--blue)"></i>Autopilot <em>1</em></div><div class="drill-items"><span>Superformula Renderer</span></div></div>
@@ -1347,6 +1664,16 @@
   <button class="export-btn" id="wallReset" style="margin-top:14px;">Reset</button>
 </div>
 
+<div class="detail-modal" id="detailModal" hidden>
+  <div class="detail-modal-backdrop" data-modal-close></div>
+  <section class="detail-dialog" role="dialog" aria-modal="true" aria-labelledby="detailTitle" tabindex="-1">
+    <button class="detail-close" type="button" data-modal-close aria-label="Close details">&times;</button>
+    <div class="detail-kicker" id="detailKicker">Dashboard detail</div>
+    <h2 class="detail-title" id="detailTitle">Metric details</h2>
+    <div class="detail-body" id="detailBody"></div>
+  </section>
+</div>
+
 <script>
   // Hero view toggle — Numbers (default, compact) vs Chart (scrollable)
   const heroSelect = document.getElementById('heroViewSelect');
@@ -1518,6 +1845,152 @@
     });
   });
   document.getElementById('sbSettings').addEventListener('click', e=>{ e.preventDefault(); e.stopPropagation(); wallPanel.hidden = !wallPanel.hidden; });
+
+  // Compact home details: metrics and projects open in one reusable modal.
+  const detailModal = document.getElementById('detailModal');
+  const detailDialog = detailModal.querySelector('.detail-dialog');
+  const detailKicker = document.getElementById('detailKicker');
+  const detailTitle = document.getElementById('detailTitle');
+  const detailBody = document.getElementById('detailBody');
+  const addMetric = document.getElementById('addMetric');
+  let modalReturnFocus = null;
+
+  function escapeDetail(value){
+    const node = document.createElement('div');
+    node.textContent = value == null ? '' : String(value);
+    return node.innerHTML;
+  }
+  function modalStats(items){
+    return '<div class="modal-stat-grid">' + items.map(item=>
+      '<div class="modal-stat"><b>'+escapeDetail(item[0])+'</b><span>'+escapeDetail(item[1])+'</span></div>'
+    ).join('') + '</div>';
+  }
+  function graphMarkup(title, labels){
+    const source = document.querySelector('.hero > .energy-spark');
+    const graph = source.cloneNode(true);
+    graph.removeAttribute('role');
+    graph.removeAttribute('aria-label');
+    graph.querySelector('.energy-spark-title').textContent = title;
+    graph.querySelectorAll('.energy-legend span').forEach((item,index)=>{
+      if(labels[index]) item.lastChild.textContent = labels[index];
+    });
+    return graph.outerHTML;
+  }
+  function openDetail(title, kicker, html, trigger){
+    modalReturnFocus = trigger || document.activeElement;
+    detailTitle.textContent = title;
+    detailKicker.textContent = kicker;
+    detailBody.innerHTML = html;
+    detailModal.hidden = false;
+    document.body.classList.add('modal-open');
+    detailDialog.focus();
+  }
+  function closeDetail(){
+    if(detailModal.hidden) return;
+    detailModal.hidden = true;
+    document.body.classList.remove('modal-open');
+    detailBody.innerHTML = '';
+    if(modalReturnFocus && typeof modalReturnFocus.focus === 'function') modalReturnFocus.focus();
+  }
+  detailModal.querySelectorAll('[data-modal-close]').forEach(el=>el.addEventListener('click', closeDetail));
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape' && !detailModal.hidden) closeDetail();
+    if(e.key === 'Tab' && !detailModal.hidden){
+      const focusable = [...detailDialog.querySelectorAll('button,[href],select,input,[tabindex]:not([tabindex="-1"])')].filter(el=>!el.disabled);
+      if(!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length-1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  });
+
+  function metricDetail(metric, card){
+    if(metric === 'projects'){
+      const rows = [...document.querySelectorAll('.pcard')].map(project=>{
+        const name = project.querySelector('.pcard-name').textContent;
+        const status = project.querySelector('.pcard-status').textContent;
+        return '<div class="modal-list-row"><span>'+escapeDetail(name)+'</span><span class="modal-status"><i></i>'+escapeDetail(status)+'</span></div>';
+      }).join('');
+      return {
+        title:'Projects overview',
+        html:modalStats([['4','Total projects'],['2','Active'],['1','Autopilot'],['1','Non-active']])+'<div class="modal-list">'+rows+'</div>'
+      };
+    }
+    if(metric === 'active'){
+      return {
+        title:'Active systems',
+        html:modalStats([['2','Active projects'],['1','Autopilot'],['99.8%','Availability'],['2 min','Last check']])+
+          '<div class="modal-list"><div class="modal-list-row"><span>Cellular Automata Visualizer</span><span class="modal-status"><i></i>Active</span></div><div class="modal-list-row"><span>Chladni Pattern Batch</span><span class="modal-status"><i></i>Active</span></div></div>'
+      };
+    }
+    if(metric === 'sources'){
+      return {
+        title:'Energy sources',
+        html:modalStats([['82%','Battery 1'],['54%','Battery 2'],['29%','Battery 3'],['4.8 kW','Combined output']])+
+          graphMarkup('Battery output · kW',['Battery 1','Battery 2','Battery 3'])
+      };
+    }
+    if(metric === 'energy'){
+      return {
+        title:'Total energy',
+        html:modalStats([['5.6 kW','Peak'],['4.8 kW','Average'],['3.9 kW','Low'],['31°C','Average temp']])+
+          graphMarkup('Energy trend · 24 hours',['Battery 1','Battery 2','Battery 3'])
+      };
+    }
+    const value = card ? card.querySelector('.v').textContent : '—';
+    const label = card ? card.querySelector('.l').textContent : 'Custom metric';
+    return {
+      title:label,
+      html:modalStats([[value,'Current value'],['24 h','Time window'],['Live','Update mode'],['Normal','Status']])+
+        graphMarkup(label+' · 24 hours',['Current','Average','Target'])
+    };
+  }
+
+  numbersView.addEventListener('click', e=>{
+    const card = e.target.closest('[data-metric]');
+    if(!card) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const detail = metricDetail(card.dataset.metric, card);
+    openDetail(detail.title, 'Metric detail', detail.html, card);
+  }, true);
+
+  addMetric.addEventListener('click', ()=>{
+    openDetail('Add a metric','Customize overview',
+      '<div class="metric-picker">'+
+        '<button class="metric-choice" type="button" data-add-metric="cpu" data-value="42%" data-label="CPU load"><b>CPU load</b><span>Current processor usage</span></button>'+
+        '<button class="metric-choice" type="button" data-add-metric="memory" data-value="6.2 GB" data-label="Memory"><b>Memory</b><span>Live allocated memory</span></button>'+
+        '<button class="metric-choice" type="button" data-add-metric="network" data-value="18 MB/s" data-label="Network"><b>Network</b><span>Current transfer rate</span></button>'+
+      '</div>', addMetric);
+  });
+  detailBody.addEventListener('click', e=>{
+    const choice = e.target.closest('[data-add-metric]');
+    if(!choice) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'hm';
+    button.dataset.metric = choice.dataset.addMetric;
+    button.innerHTML = '<div class="v">'+escapeDetail(choice.dataset.value)+'</div><div class="l">'+escapeDetail(choice.dataset.label)+'</div>';
+    numbersView.insertBefore(button, addMetric);
+    closeDetail();
+    button.focus();
+  });
+
+  document.querySelectorAll('.pcard').forEach(card=>{
+    card.tabIndex = 0;
+    const openProject = ()=>{
+      const name = card.querySelector('.pcard-name').textContent.trim();
+      const updated = card.querySelector('.pcard-sub').textContent.trim();
+      const status = card.querySelector('.pcard-status').textContent.trim();
+      const progress = card.querySelector('.pcard-pct span')?.textContent || '—';
+      const agents = card.querySelectorAll('.pcard-pct span')[1]?.textContent || '0 agents';
+      openDetail(name,'Project detail',
+        modalStats([[status,'Current status'],[progress,'Progress'],[agents,'Assigned'],[updated.replace('Updated ','') ,'Last update']])+
+        graphMarkup('Project activity · 24 hours',['Runs','Events','Errors']), card);
+    };
+    card.addEventListener('click', e=>{ if(!e.target.closest('.pcard-icon')) openProject(); });
+    card.addEventListener('keydown', e=>{ if(e.target === card && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); openProject(); } });
+  });
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"2aeec7579b0044ad80905333985ef882","r":1,"spa":2}' crossorigin="anonymous"></script>
 </body>
