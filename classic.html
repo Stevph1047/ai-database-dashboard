@@ -1203,6 +1203,63 @@ body,body *{color:#000!important}
 @media(max-width:620px){.machine-twin-grid{grid-template-columns:1fr}}
 @media(max-width:480px){.main[data-view="home"] .pgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 8px}.main[data-view="home"] .pcard{width:100%}.main[data-view="home"] .pcard-status{left:calc(50% + 19px)}}
 </style>
+<style>
+/* Warm wood panels */
+body {
+  background:
+    radial-gradient(ellipse at 10% 15%,
+      rgba(255,240,211,.35), transparent 55%),
+    linear-gradient(90deg,
+      rgba(255,240,215,.10), rgba(67,43,26,.22)),
+    repeating-linear-gradient(90deg,
+      #bca080 0 118px,
+      #8b6c50 119px 122px,
+      #b29575 123px 242px,
+      #806047 243px 246px) !important;
+  background-attachment: fixed !important;
+}
+
+body::before {
+  display: block !important;
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: repeating-linear-gradient(92deg,
+    rgba(255,244,220,.035) 0 1px,
+    transparent 1px 13px) !important;
+}
+
+/* Warm frosted glass */
+.topnav,
+.gnav,
+.gnav.open,
+.main[data-view="home"] .hm,
+.detail-dialog,
+.machine-twin {
+  background: linear-gradient(135deg,
+    rgba(255,244,223,.48),
+    rgba(164,132,100,.32)) !important;
+  border-color: rgba(255,247,232,.5) !important;
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.3),
+    0 12px 32px rgba(64,42,27,.15) !important;
+}
+
+.main[data-view="home"] .pcard-icon {
+  background: linear-gradient(135deg,
+    rgba(255,244,223,.55),
+    rgba(150,117,86,.35)) !important;
+  border: 1px solid rgba(255,247,232,.5);
+}
+
+body, body * {
+  color: #000 !important;
+}
+</style>
 </head>
 <body>
 
