@@ -2161,5 +2161,918 @@ document.querySelectorAll('.pcard').forEach(card=>{
 });
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"2aeec7579b0044ad80905333985ef882","r":1,"spa":2}' crossorigin="anonymous"></script>
+<style id="energy-digital-twin-ui">
+.detail-dialog:has(.et-workspace) {
+  width: min(1100px, 96vw);
+  max-width: 1100px;
+}
+
+.et-workspace {
+  font-size: 12px;
+}
+
+.et-note {
+  margin: 0 0 16px;
+  line-height: 1.6;
+}
+
+.et-tabs,
+.et-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.et-workspace button,
+.et-upload {
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 12px;
+  background: rgba(255,255,255,.32);
+  cursor: pointer;
+  font: inherit;
+}
+
+.et-workspace button[aria-selected="true"] {
+  background: #d7e9ca;
+  border-color: #557b43;
+}
+
+.et-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 16px;
+}
+
+.et-panel {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 22px;
+  background: linear-gradient(
+    140deg,
+    rgba(255,255,255,.52),
+    rgba(192,163,132,.33)
+  );
+}
+
+.et-summary {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.et-photo,
+.et-empty {
+  box-sizing: border-box;
+  width: 100%;
+  height: 190px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.22);
+}
+
+.et-photo {
+  object-fit: contain;
+}
+
+.et-empty {
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.et-upload {
+  display: block;
+  margin-top: 9px;
+  text-align: center;
+}
+
+.et-upload input {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.et-workspace h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.et-workspace h4 {
+  margin: 0 0 15px;
+  font-size: 13px;
+}
+
+.et-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.et-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74,222,128,.7);
+}
+
+.et-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.et-field {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.25);
+}
+
+.et-field span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10px;
+}
+
+.et-field b {
+  font-size: 13px;
+}
+
+.et-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.et-value {
+  margin: 10px 0;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.et-small {
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.et-chart {
+  display: block;
+  width: 100%;
+  height: 145px;
+}
+
+.et-times {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  margin-top: 6px;
+  font-size: 9px;
+}
+
+.et-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.et-canvas {
+  display: block;
+  width: 100%;
+  height: 260px;
+  border-radius: 15px;
+  background: rgba(242,235,223,.67);
+}
+
+.et-cables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.et-cables span {
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.3);
+}
+
+@media (max-width: 700px) {
+  .et-top,
+  .et-bottom,
+  .et-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .et-photo,
+  .et-empty {
+    height: 170px;
+  }
+
+  .et-metrics {
+    gap: 8px;
+  }
+
+  .et-metrics .et-panel {
+    padding: 12px;
+  }
+
+  .et-value {
+    font-size: 23px;
+  }
+}
+</style>
+
+<script>
+(() => {
+  const detailBody = document.getElementById("detailBody");
+
+  if (!detailBody) return;
+
+  let stopWorkspace = () => {};
+
+  const observer = new MutationObserver(() => {
+    if (detailBody.querySelector(".machine-twin-grid")) {
+      createEnergyWorkspace();
+    } else if (!detailBody.querySelector(".et-workspace")) {
+      stopWorkspace();
+    }
+  });
+
+  observer.observe(detailBody, {
+    childList: true
+  });
+
+  function createEnergyWorkspace() {
+    stopWorkspace();
+
+    detailBody.innerHTML = `
+      <div class="et-workspace">
+
+        <p class="et-note">
+          Digital Twin workspace · Demonstration data, not connected
+          to real hardware. Device models remain inside this project.
+        </p>
+
+        <div class="et-tabs" role="tablist"
+             aria-label="Energy modules">
+
+          <button type="button"
+                  role="tab"
+                  data-module="1"
+                  aria-selected="true">
+            Energy module 1
+          </button>
+
+          <button type="button"
+                  role="tab"
+                  data-module="2"
+                  aria-selected="false">
+            Energy module 2
+          </button>
+
+          <button type="button"
+                  role="tab"
+                  data-module="3"
+                  aria-selected="false">
+            Energy module 3
+          </button>
+        </div>
+
+        <div class="et-top">
+
+          <section class="et-panel et-summary">
+
+            <div>
+              <img class="et-photo"
+                   alt=""
+                   hidden>
+
+              <div class="et-empty">
+                Add actual device image<br>
+                PNG, JPG or WebP
+              </div>
+
+              <label class="et-upload">
+                Upload device photo
+
+                <input type="file"
+                       accept="image/png,image/jpeg,image/webp">
+              </label>
+
+              <p class="et-small et-message"
+                 role="status"></p>
+            </div>
+
+            <div>
+              <h3 class="et-name">Energy module 1</h3>
+
+              <div class="et-code">EM-001</div>
+
+              <div class="et-status">
+                Simulation running
+              </div>
+
+              <div class="et-fields">
+
+                <div class="et-field">
+                  <span>Min / max output</span>
+                  <b>0.8 / 2.4 kW</b>
+                </div>
+
+                <div class="et-field">
+                  <span>Connected device</span>
+                  <b class="et-device">Machine 01</b>
+                </div>
+
+                <div class="et-field">
+                  <span>Simulation duration</span>
+                  <b class="et-duration">00:00</b>
+                </div>
+
+                <div class="et-field">
+                  <span>Average power</span>
+                  <b class="et-average">—</b>
+                </div>
+
+                <div class="et-field">
+                  <span>Frequency</span>
+                  <b>50 Hz</b>
+                </div>
+
+                <div class="et-field">
+                  <span>Simulated energy</span>
+                  <b class="et-energy">0.000 kWh</b>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="et-panel">
+            <h4>Timestamped performance · kW</h4>
+
+            <svg class="et-chart"
+                 viewBox="0 0 320 150"
+                 role="img"
+                 aria-label="Simulated power performance">
+
+              <path d="M10 30H310 M10 75H310 M10 120H310"
+                    fill="none"
+                    stroke="rgba(0,0,0,.15)"></path>
+
+              <polyline class="et-line"
+                        fill="none"
+                        stroke="#47764d"
+                        stroke-width="3">
+              </polyline>
+            </svg>
+
+            <div class="et-times">
+              <span class="et-start">—</span>
+              <span class="et-end">—</span>
+            </div>
+
+            <p class="et-small">
+              Latest sample:
+              <time class="et-timestamp">—</time><br>
+              Updates every second while running.
+            </p>
+          </section>
+        </div>
+
+        <div class="et-metrics">
+
+          <section class="et-panel">
+            <h4>Live consumption</h4>
+            <div class="et-value et-power">—</div>
+            <span class="et-small">kW · simulated</span>
+          </section>
+
+          <section class="et-panel">
+            <h4>Voltage</h4>
+            <div class="et-value et-volts">—</div>
+            <span class="et-small">V · simulated</span>
+          </section>
+
+          <section class="et-panel">
+            <h4>Temperature</h4>
+            <div class="et-value et-temp">—</div>
+            <span class="et-small">°C · simulated</span>
+          </section>
+        </div>
+
+        <div class="et-bottom">
+
+          <section class="et-panel">
+            <h4>Connected cables</h4>
+
+            <div class="et-cables">
+              <span>Cable 1</span>
+              <span>Cable 2</span>
+              <span>Cable 3</span>
+              <span>Cable 4</span>
+              <span>Cable 5</span>
+            </div>
+
+            <div class="et-controls">
+              <button type="button" class="et-toggle">
+                Pause simulation
+              </button>
+
+              <button type="button" class="et-reset">
+                Reset
+              </button>
+            </div>
+
+            <p class="et-small">
+              Conceptual ring-device geometry based on your sketch.
+              This is a visual simulation, not a validated engineering
+              model or real sensor connection.
+            </p>
+          </section>
+
+          <section class="et-panel">
+            <h4>3D-style digital twin · wireframe</h4>
+
+            <canvas class="et-canvas"
+                    width="720"
+                    height="420"
+                    role="img"
+                    aria-label="Rotating conceptual device wireframe">
+            </canvas>
+
+            <p class="et-small">
+              Animated sketch · EM-00<span
+              class="et-model-number">1</span>
+            </p>
+          </section>
+        </div>
+      </div>
+    `;
+
+    const workspace =
+      detailBody.querySelector(".et-workspace");
+
+    const find = selector =>
+      workspace.querySelector(selector);
+
+    let selectedModule = 1;
+    let simulationRunning = true;
+    let seconds = 0;
+    let totalPower = 0;
+    let history = [];
+    let rotation = 0;
+    let animationFrame;
+    let workspaceActive = true;
+
+    function loadDevicePhoto() {
+      let savedPhoto = "";
+
+      try {
+        savedPhoto = localStorage.getItem(
+          "energy-twin-photo-" + selectedModule
+        ) || "";
+      } catch (error) {}
+
+      const image = find(".et-photo");
+      const emptyBox = find(".et-empty");
+
+      image.hidden = !savedPhoto;
+      emptyBox.style.display =
+        savedPhoto ? "none" : "grid";
+
+      if (savedPhoto) {
+        image.src = savedPhoto;
+        image.alt =
+          "Uploaded image of energy module " +
+          selectedModule;
+      } else {
+        image.removeAttribute("src");
+      }
+
+      find(".et-message").textContent = "";
+      find('input[type="file"]').value = "";
+    }
+
+    function renderMetrics() {
+      const power =
+        1.15 +
+        selectedModule * 0.17 +
+        Math.sin(seconds * 0.29 + selectedModule) *
+        0.23;
+
+      const voltage =
+        230 + Math.sin(seconds * 0.17) * 2;
+
+      const temperature =
+        29 +
+        selectedModule +
+        Math.sin(seconds * 0.1) * 1.5;
+
+      find(".et-power").textContent =
+        power.toFixed(2);
+
+      find(".et-volts").textContent =
+        voltage.toFixed(1);
+
+      find(".et-temp").textContent =
+        temperature.toFixed(1);
+
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+
+      find(".et-duration").textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(remainingSeconds).padStart(2, "0");
+
+      const average =
+        seconds ? totalPower / seconds : power;
+
+      find(".et-average").textContent =
+        average.toFixed(2) + " kW";
+
+      find(".et-energy").textContent =
+        (totalPower / 3600).toFixed(3) + " kWh";
+
+      const chartPoints = history.map(
+        (record, index) => {
+          const x = 10 + index * 300 / 29;
+          const y = 135 - record.power / 2.4 * 120;
+
+          return x + "," + y;
+        }
+      ).join(" ");
+
+      find(".et-line").setAttribute(
+        "points",
+        chartPoints
+      );
+
+      if (history.length) {
+        const first = history[0].time;
+        const last = history[history.length - 1].time;
+
+        find(".et-start").textContent =
+          first.toLocaleTimeString();
+
+        find(".et-end").textContent =
+          last.toLocaleTimeString();
+
+        find(".et-timestamp").textContent =
+          last.toLocaleString();
+
+        find(".et-timestamp").dateTime =
+          last.toISOString();
+      }
+
+      return power;
+    }
+
+    function resetSimulation() {
+      seconds = 0;
+      totalPower = 0;
+      history = [];
+
+      history.push({
+        power: renderMetrics(),
+        time: new Date()
+      });
+
+      renderMetrics();
+    }
+
+    workspace
+      .querySelectorAll("[data-module]")
+      .forEach(button => {
+        button.addEventListener("click", () => {
+          selectedModule =
+            Number(button.dataset.module);
+
+          workspace
+            .querySelectorAll("[data-module]")
+            .forEach(tab => {
+              tab.setAttribute(
+                "aria-selected",
+                String(tab === button)
+              );
+            });
+
+          find(".et-name").textContent =
+            "Energy module " + selectedModule;
+
+          find(".et-code").textContent =
+            "EM-00" + selectedModule;
+
+          find(".et-device").textContent =
+            "Machine 0" + selectedModule;
+
+          find(".et-model-number").textContent =
+            selectedModule;
+
+          loadDevicePhoto();
+          resetSimulation();
+        });
+      });
+
+    find('input[type="file"]')
+      .addEventListener("change", event => {
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const acceptedTypes = [
+          "image/png",
+          "image/jpeg",
+          "image/webp"
+        ];
+
+        if (
+          !acceptedTypes.includes(file.type) ||
+          file.size > 5 * 1024 * 1024
+        ) {
+          find(".et-message").textContent =
+            "Choose a PNG, JPG or WebP smaller than 5 MB.";
+
+          return;
+        }
+
+        const moduleForPhoto = selectedModule;
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const originalImage = new Image();
+
+          originalImage.onload = () => {
+            const resizeCanvas =
+              document.createElement("canvas");
+
+            const maximumSize = 800;
+
+            const scale = Math.min(
+              1,
+              maximumSize /
+              Math.max(
+                originalImage.width,
+                originalImage.height
+              )
+            );
+
+            resizeCanvas.width = Math.round(
+              originalImage.width * scale
+            );
+
+            resizeCanvas.height = Math.round(
+              originalImage.height * scale
+            );
+
+            resizeCanvas
+              .getContext("2d")
+              .drawImage(
+                originalImage,
+                0,
+                0,
+                resizeCanvas.width,
+                resizeCanvas.height
+              );
+
+            const imageData =
+              resizeCanvas.toDataURL(
+                "image/webp",
+                0.85
+              );
+
+            let saved = true;
+
+            try {
+              localStorage.setItem(
+                "energy-twin-photo-" +
+                moduleForPhoto,
+                imageData
+              );
+            } catch (error) {
+              saved = false;
+            }
+
+            if (
+              workspaceActive &&
+              selectedModule === moduleForPhoto
+            ) {
+              const image = find(".et-photo");
+
+              image.src = imageData;
+              image.hidden = false;
+              image.alt =
+                "Uploaded device image";
+
+              find(".et-empty").style.display =
+                "none";
+
+              find(".et-message").textContent =
+                saved
+                  ? "Saved in this browser only."
+                  : "Photo displayed, but browser storage is full.";
+            }
+          };
+
+          originalImage.onerror = () => {
+            if (workspaceActive) {
+              find(".et-message").textContent =
+                "Unable to open this image.";
+            }
+          };
+
+          originalImage.src = reader.result;
+        };
+
+        reader.readAsDataURL(file);
+      });
+
+    find(".et-toggle")
+      .addEventListener("click", () => {
+        simulationRunning = !simulationRunning;
+
+        find(".et-toggle").textContent =
+          simulationRunning
+            ? "Pause simulation"
+            : "Resume simulation";
+
+        find(".et-status").textContent =
+          simulationRunning
+            ? "Simulation running"
+            : "Simulation paused";
+      });
+
+    find(".et-reset")
+      .addEventListener(
+        "click",
+        resetSimulation
+      );
+
+    const canvas = find(".et-canvas");
+    const context = canvas.getContext("2d");
+
+    function projectPoint(x, y, z) {
+      const rotatedX =
+        x * Math.cos(rotation) -
+        z * Math.sin(rotation);
+
+      const rotatedZ =
+        x * Math.sin(rotation) +
+        z * Math.cos(rotation);
+
+      return [
+        360 + rotatedX * 1.8,
+        210 + y * 1.5 + rotatedZ * 0.65
+      ];
+    }
+
+    function drawLine(points) {
+      context.beginPath();
+
+      points.forEach((point, index) => {
+        const screenPoint =
+          projectPoint(
+            point[0],
+            point[1],
+            point[2]
+          );
+
+        if (index === 0) {
+          context.moveTo(
+            screenPoint[0],
+            screenPoint[1]
+          );
+        } else {
+          context.lineTo(
+            screenPoint[0],
+            screenPoint[1]
+          );
+        }
+      });
+
+      context.stroke();
+    }
+
+    function drawWireframe() {
+      if (!workspaceActive) return;
+
+      if (simulationRunning) {
+        rotation += 0.006;
+      }
+
+      context.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      context.strokeStyle = "#427e60";
+      context.lineWidth = 1.2;
+
+      [-45, 45].forEach(y => {
+        [105, 135].forEach(radius => {
+          const points = [];
+
+          for (let index = 0; index <= 80; index++) {
+            const angle = index * Math.PI / 40;
+
+            points.push([
+              Math.cos(angle) * radius,
+              y,
+              Math.sin(angle) * radius
+            ]);
+          }
+
+          drawLine(points);
+        });
+      });
+
+      for (let index = 0; index < 56; index++) {
+        const angle = index * Math.PI / 28;
+
+        [105, 135].forEach(radius => {
+          drawLine([
+            [
+              Math.cos(angle) * radius,
+              -45,
+              Math.sin(angle) * radius
+            ],
+            [
+              Math.cos(angle) * radius,
+              45,
+              Math.sin(angle) * radius
+            ]
+          ]);
+        });
+      }
+
+      for (let index = 0; index < 4; index++) {
+        const angle = index * Math.PI / 2;
+
+        drawLine([
+          [
+            Math.cos(angle) * 105,
+            -45,
+            Math.sin(angle) * 105
+          ],
+          [
+            Math.cos(angle) * 135,
+            -45,
+            Math.sin(angle) * 135
+          ]
+        ]);
+      }
+
+      animationFrame =
+        requestAnimationFrame(drawWireframe);
+    }
+
+    const simulationTimer = setInterval(() => {
+      if (!simulationRunning) return;
+
+      seconds++;
+
+      const power =
+        1.15 +
+        selectedModule * 0.17 +
+        Math.sin(
+          seconds * 0.29 + selectedModule
+        ) * 0.23;
+
+      totalPower += power;
+
+      history.push({
+        power: power,
+        time: new Date()
+      });
+
+      if (history.length > 30) {
+        history.shift();
+      }
+
+      renderMetrics();
+    }, 1000);
+
+    stopWorkspace = () => {
+      workspaceActive = false;
+      clearInterval(simulationTimer);
+      cancelAnimationFrame(animationFrame);
+    };
+
+    loadDevicePhoto();
+    resetSimulation();
+    drawWireframe();
+  }
+})();
+</script>
 </body>
 </html>
