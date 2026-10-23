@@ -1173,6 +1173,36 @@
   @media(max-width:700px){ .main[data-view="home"] .hero-metrics{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; } .modal-stat-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media(max-width:480px){ .detail-modal{ padding:12px; } .detail-dialog{ padding:21px 16px; border-radius:19px; } .metric-picker{ grid-template-columns:1fr; } }
 </style>
+<style id="compact-project-apps">
+.main[data-view="home"] .pgrid{grid-template-columns:repeat(auto-fill,100px);gap:22px 18px;justify-content:start}
+.main[data-view="home"] .pcard{position:relative;width:100px;min-height:0;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible}
+.main[data-view="home"] .pcard-top{align-items:center;gap:9px;margin:0}
+.main[data-view="home"] .pcard-icon{width:64px;height:64px;min-height:64px;aspect-ratio:1;border-radius:16px;font-size:29px;overflow:hidden;box-shadow:inset 0 0 0 1px #ffffff18}
+.main[data-view="home"] .pcard-icon img{width:100%;height:100%;object-fit:contain}
+.main[data-view="home"] .pcard-icon::after{display:none}
+.main[data-view="home"] .pcard-top>div:last-child:not(.pcard-icon){padding:0;width:100%;text-align:center}
+.main[data-view="home"] .pcard-name{font-size:11px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:31px;color:#000}
+.main[data-view="home"] .pcard-sub,.main[data-view="home"] .pcard-badge,.main[data-view="home"] .bar-outer,.main[data-view="home"] .pcard-pct{display:none!important}
+.main[data-view="home"] .pcard-status{position:absolute;top:52px;left:69px;width:12px;height:12px;min-width:0;margin:0;padding:0;border:2px solid #202220;border-radius:50%;font-size:0;line-height:0;background:#94a3b8;box-shadow:0 0 0 1px #ffffff28;pointer-events:none}
+.main[data-view="home"] .pcard-status::before{display:none}
+.main[data-view="home"] .pcard-status.active{background:#4ade80}
+.main[data-view="home"] .pcard-status.progress{background:#60a5fa}
+.main[data-view="home"] .pcard-status.paused{background:#fbbf24}
+.main[data-view="home"] .pcard:focus-visible,.main[data-view="home"] .pcard-icon:focus-visible{outline:2px solid #93c5fd;outline-offset:5px}
+body,body *{color:#000!important}
+.main[data-view="home"] .hero-top{display:none!important}
+.machine-twin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.machine-twin{position:relative;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.045)}
+.machine-twin-visual{display:grid;place-items:center;height:116px;margin-bottom:14px;border-radius:14px;background:linear-gradient(145deg,rgba(74,222,128,.18),rgba(96,165,250,.08));font-size:50px}
+.machine-twin-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:700}
+.machine-twin-state{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:600}
+.machine-twin-state::before{content:'';width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 9px rgba(74,222,128,.8)}
+.machine-twin-meta{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:10px}
+.machine-twin-meter{height:5px;margin-top:10px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+.machine-twin-meter i{display:block;height:100%;border-radius:inherit;background:#4ade80}
+@media(max-width:620px){.machine-twin-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.main[data-view="home"] .pgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 8px}.main[data-view="home"] .pcard{width:100%}.main[data-view="home"] .pcard-status{left:calc(50% + 19px)}}
+</style>
 </head>
 <body>
 
@@ -1262,7 +1292,7 @@
           <div class="hero-metrics" id="heroNumbersView" style="margin-top:4px;">
             <button class="hm blue" type="button" data-metric="projects"><div class="v">4</div><div class="l">Projects</div></button>
             <button class="hm ok hm-click" type="button" id="activeMetric" data-metric="active" aria-expanded="false"><div class="v">2</div><div class="l">Active</div></button>
-            <button class="hm purple" type="button" data-metric="sources"><div class="v">3</div><div class="l">Energy sources</div></button>
+            <button class="hm purple" type="button" data-metric="sources"><div class="v">3</div><div class="l">Active Energy Modules</div></button>
             <button class="hm hm-click" type="button" id="energyMetric" data-metric="energy" aria-expanded="false"><div class="v">4.8 kW</div><div class="l">Total energy</div></button>
             <button class="hm metric-add" type="button" id="addMetric" aria-label="Add a metric"><span class="plus">+</span><span class="l">Add metric</span></button>
           </div>
@@ -1809,10 +1839,10 @@
     const f = thumbInput.files[0]; if(!f || !thumbTarget) return;
     const img = new Image();
     img.onload = ()=>{
-      const c = document.createElement('canvas'); c.width = 800; c.height = 500;
-      const s = Math.max(c.width/img.width, c.height/img.height), w = img.width*s, h = img.height*s;
+      const c = document.createElement('canvas'); c.width = 256; c.height = 256;
+      const s = Math.min(c.width/img.width, c.height/img.height), w = img.width*s, h = img.height*s;
       c.getContext('2d').drawImage(img, (c.width-w)/2, (c.height-h)/2, w, h);
-      const url = c.toDataURL('image/jpeg', 0.85);
+      const url = c.toDataURL('image/png');
       thumbTarget.icon.innerHTML = '<img alt="" src="'+url+'">';
       try{ localStorage.setItem('thumb:'+thumbTarget.name, url); }catch(err){}
     };
@@ -1925,9 +1955,12 @@
     }
     if(metric === 'sources'){
       return {
-        title:'Energy sources',
-        html:modalStats([['82%','Battery 1'],['54%','Battery 2'],['29%','Battery 3'],['4.8 kW','Combined output']])+
-          graphMarkup('Battery output · kW',['Battery 1','Battery 2','Battery 3'])
+        title:'Active Energy Modules',
+        html:'<div class="machine-twin-grid" aria-label="Digital twins of all active energy modules">'+
+          '<div class="machine-twin"><div class="machine-twin-visual" aria-hidden="true">▣</div><div class="machine-twin-head"><span>Battery 1</span><span class="machine-twin-state">Active</span></div><div class="machine-twin-meta"><span>Digital twin</span><b>82%</b></div><div class="machine-twin-meter"><i style="width:82%"></i></div></div>'+
+          '<div class="machine-twin"><div class="machine-twin-visual" aria-hidden="true">▣</div><div class="machine-twin-head"><span>Battery 2</span><span class="machine-twin-state">Active</span></div><div class="machine-twin-meta"><span>Digital twin</span><b>54%</b></div><div class="machine-twin-meter"><i style="width:54%"></i></div></div>'+
+          '<div class="machine-twin"><div class="machine-twin-visual" aria-hidden="true">▣</div><div class="machine-twin-head"><span>Battery 3</span><span class="machine-twin-state">Active</span></div><div class="machine-twin-meta"><span>Digital twin</span><b>29%</b></div><div class="machine-twin-meter"><i style="width:29%"></i></div></div>'+
+        '</div>'
       };
     }
     if(metric === 'energy'){
@@ -1991,6 +2024,17 @@
     card.addEventListener('click', e=>{ if(!e.target.closest('.pcard-icon')) openProject(); });
     card.addEventListener('keydown', e=>{ if(e.target === card && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); openProject(); } });
   });
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"2aeec7579b0044ad80905333985ef882","r":1,"spa":2}' crossorigin="anonymous"></script>
+<script>
+document.querySelectorAll('.pcard').forEach(card=>{
+ const status=card.querySelector('.pcard-status');
+ if(!status)return;
+ const label=status.classList.contains('paused')?'Standby':status.textContent.trim();
+ status.textContent=label;status.title=label;status.setAttribute('aria-label',label);
+ card.title=card.querySelector('.pcard-name').textContent+' — '+label;
+ card.setAttribute('aria-label',card.title);
+});
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"2aeec7579b0044ad80905333985ef882","r":1,"spa":2}' crossorigin="anonymous"></script>
 </body>
